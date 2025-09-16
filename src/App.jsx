@@ -34,7 +34,7 @@ function App() {
         <Footer />
   </div>
 
-  <Toaster richColors position='top-center'/>
+  <Toaster richColors position='top-center '/>
 
 </div>
 
