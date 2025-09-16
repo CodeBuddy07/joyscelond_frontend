@@ -81,7 +81,7 @@ const HeroSection = () => {
               Scan
               <br />
               <span className="bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] bg-clip-text text-transparent">
-                QR Code Ruhul
+                QR Code
               </span>
             </h1>
             <p className="mt-6 mb-8 text-lg sm:mb-12">

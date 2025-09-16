@@ -33,7 +33,7 @@ const Navbar = () => {
               Home
             </a>
             <a
-              href="https://joyscelond-dashboard.vercel.app/"
+              href="https://dashboard.kutmasterz.com/"
               className="hover:text-gray-900 md:font-semibold lg:font-bold text-sm md:text-base lg:text-3xl hover:underline hover:decoration-sky-400 hover:underline-offset-8 whitespace-nowrap"
             >
               Dashboard
