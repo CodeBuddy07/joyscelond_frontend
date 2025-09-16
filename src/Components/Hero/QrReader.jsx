@@ -41,7 +41,7 @@ const QrReader = ({ onScan, onError, onClose }) => {
             {
               onDecodeError: err => {
                 // Silent handling of decode errors - normal when no QR code is visible
-              },
+              } ,
               preferredCamera: "environment",
               highlightScanRegion: true,
               highlightCodeOutline: true,
