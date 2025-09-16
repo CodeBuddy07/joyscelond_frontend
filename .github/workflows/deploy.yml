@@ -1,0 +1,105 @@
+name: Frontend CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Change this if you want a different branch to trigger the action
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'  # Cache npm dependencies for faster builds
+    
+    - name: Install dependencies
+      run: npm ci  # Use npm ci for faster, reliable installs in CI
+    
+    - name: Build for production
+      run: npm run build
+      env:
+        NODE_ENV: production
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist-files
+        path: dist/
+        retention-days: 1
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: dist-files
+        path: dist/
+    
+    - name: Deploy to VPS
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        VPS_IP: ${{ secrets.VPS_IP }}
+        VPS_USER: ${{ secrets.VPS_USER }}
+        PROJECT_PATH: ${{ secrets.PROJECT_PATH }}  # e.g., /var/www/frontend or /root/my_frontend
+      run: |
+        # Set up SSH
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        
+        # Add VPS to known hosts to avoid host key verification
+        ssh-keyscan -H $VPS_IP >> ~/.ssh/known_hosts
+        
+        # Deploy to VPS
+        ssh -i ~/.ssh/id_rsa $VPS_USER@$VPS_IP << 'EOF'
+          # Navigate to project directory
+          cd $PROJECT_PATH || { echo "Project path not found: $PROJECT_PATH"; exit 1; }
+          
+          # Pull latest changes
+          git pull origin main
+          
+          # Install dependencies
+          npm ci
+          
+          # Build the project
+          npm run build
+          
+          # Option 1: Deploy with Nginx (Recommended for Vite static files)
+          if [ "${{ secrets.DEPLOY_METHOD }}" = "nginx" ]; then
+            # Copy files to nginx web directory
+            sudo mkdir -p /var/www/${{ secrets.APP_NAME }}
+            sudo cp -r dist/* /var/www/${{ secrets.APP_NAME }}/
+            sudo chown -R www-data:www-data /var/www/${{ secrets.APP_NAME }}
+            sudo systemctl reload nginx
+            echo "Deployed to nginx: /var/www/${{ secrets.APP_NAME }}"
+          
+          # Option 2: Deploy with PM2 + HTTP Server
+          elif [ "${{ secrets.DEPLOY_METHOD }}" = "pm2" ]; then
+            # Install serve if not already installed
+            npm install -g serve || echo "Serve already installed"
+            
+            # Restart PM2 app
+            pm2 delete ${{ secrets.APP_NAME }} 2>/dev/null || true
+            pm2 start "npx serve -s dist -l ${{ secrets.APP_PORT }}" --name "${{ secrets.APP_NAME }}"
+            pm2 save
+            echo "Deployed with PM2 on port ${{ secrets.APP_PORT }}"
+          
+          else
+            echo "No deployment method specified. Set DEPLOY_METHOD secret to 'nginx' or 'pm2'"
+            exit 1
+          fi
+        EOF

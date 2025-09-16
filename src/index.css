@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+body {
+  @apply bg-base-200;
+  scroll-behavior: smooth;
+}
