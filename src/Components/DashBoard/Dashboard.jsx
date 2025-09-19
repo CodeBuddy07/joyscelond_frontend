@@ -3,6 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 
 import { ProtectedRoute } from '../../lib/ProtectedRoute';
 import axiosSecure from '../../lib/axiosSecure';
 import Pagination from '../../lib/Pagination';
+import { toast } from 'sonner';
 
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,6 +48,33 @@ const Dashboard = () => {
     }
   };
 
+  const handleManualScan = async (secret) => {
+    try {
+      const response = await axiosSecure.post(`/api/v1/ticket/validate/${eventID}:${secret}`);
+      console.log(response);
+      if (response.data.data?.scanCount > 1) {
+        toast.warning('Duplicate Scan Detected!', {
+          description: `This QR code has been scanned ${response.data.data.scanCount} times`,
+          duration: 4000,
+        });
+      } else if (response.data.data?.scanCount === 1 && response.data.success) {
+        toast.success(response.data.message || 'Ticket validation successful!', {
+          description: 'QR code processed successfully',
+          duration: 3000,
+        });
+      } else {
+        toast.error(response.data.message || 'Ticket validation unsuccessful!', {
+          duration: 4000,
+        });
+      }
+    } catch (error) {
+      toast.error(error.response.data.message || 'Ticket validation unsuccessful!', {
+        duration: 4000,
+      });
+      console.error('Error manual scan: ', error);
+    }
+  };
+
   useEffect(() => {
     fetchAttendees();
   }, [eventID, searchTerm, currentPage]);
@@ -82,7 +110,7 @@ const Dashboard = () => {
             >
               <div className="text-center">
                 <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-red-600`}>
-                  {(  attendees.length * totalPages) - attendees.filter(ticket => ticket.isUsed).length}
+                  {(attendees.length * totalPages) - attendees.filter(ticket => ticket.isUsed).length}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
                   Absent
@@ -95,7 +123,7 @@ const Dashboard = () => {
             >
               <div className="text-center">
                 <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-green-600`}>
-                  { attendees.filter(ticket => ticket.isUsed).length}
+                  {attendees.filter(ticket => ticket.isUsed).length}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
                   Present
@@ -194,9 +222,13 @@ const Dashboard = () => {
                       <td className="px-6 py-4 text-sm text-gray-900 text-center">
                         {attendee.ticketID}
                       </td>
-                      <td className="px-6 py-4 text-center">
+                      <td className="px-6 py-4 text-center flex items-center justify-center gap-2">
                         <button onClick={() => handleBlockToggle(attendee._id, !attendee.isBlocked)} className="inline-flex items-center px-4 py-1 border border-red-300 text-red-600 text-sm font-medium rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
                           {attendee.isBlocked ? 'Activate' : 'Block'}
+                        </button>
+
+                        <button onClick={() => handleManualScan(attendee.secureToken)} className="inline-flex items-center px-4 py-1 border border-green-300 text-green-600 text-sm font-medium rounded-full hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                          Manual Scan
                         </button>
                       </td>
                     </tr>
