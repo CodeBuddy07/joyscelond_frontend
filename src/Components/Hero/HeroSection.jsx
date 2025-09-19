@@ -1,76 +1,165 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { RiQrScan2Line } from "react-icons/ri";
-import { X } from 'lucide-react';
+import { X, RotateCcw, CheckCircle } from 'lucide-react';
 import QrReader from './QrReader';
 import axiosSecure from '../../lib/axiosSecure';
 import { toast } from 'sonner';
 
 const HeroSection = () => {
   const [isScanning, setIsScanning] = useState(false);
-  const [scanCount, setScanCount] = useState(0);
+  const [scanResults, setScanResults] = useState([]);
   const [isProcessingAPI, setIsProcessingAPI] = useState(false);
+  const [sessionStats, setSessionStats] = useState({
+    totalScans: 0,
+    successfulScans: 0,
+    duplicateScans: 0,
+    errorScans: 0
+  });
 
-  const handleScan = async (data) => {
-    if (!data || isProcessingAPI) {
+  // Ref to track API calls in progress to prevent race conditions
+  const apiCallsInProgress = useRef(new Set());
+
+  const updateSessionStats = useCallback((type) => {
+    setSessionStats(prev => ({
+      ...prev,
+      totalScans: prev.totalScans + 1,
+      [type]: prev[type] + 1
+    }));
+  }, []);
+
+  const handleScan = useCallback(async (qrData) => {
+    // Prevent multiple API calls for the same QR data
+    if (apiCallsInProgress.current.has(qrData)) {
       return;
     }
 
     try {
+      apiCallsInProgress.current.add(qrData);
       setIsProcessingAPI(true);
       
-      console.log('Processing QR code:', data);
+      console.log('Processing QR code:', qrData);
       
       // Show processing toast
-      const loadingToast = toast.loading('Processing QR code...');
+      const loadingToast = toast.loading('Processing QR code...', {
+        description: 'Validating ticket information'
+      });
       
-      const response = await axiosSecure.post(data);
+      const response = await axiosSecure.post(qrData);
       
       // Dismiss loading toast
       toast.dismiss(loadingToast);
 
       console.log('API Response:', response.data);
       
-      // Update scan count for UI feedback
-      setScanCount(prev => prev + 1);
+      // Create scan result object
+      const scanResult = {
+        id: Date.now(),
+        qrData,
+        timestamp: new Date().toLocaleTimeString(),
+        response: response.data,
+        scanCount: response.data.data?.scanCount || 1
+      };
+
+      // Add to scan results
+      setScanResults(prev => [scanResult, ...prev.slice(0, 9)]); // Keep last 10 results
       
-      if (response.data.data.scanCount > 1) {
-        toast.warning('Duplicated Scan!', {
-          description: `This QR code has been scanned ${response.data.data.scanCount} times`
+      if (response.data.data?.scanCount > 1) {
+        updateSessionStats('duplicateScans');
+        toast.warning('Duplicate Scan Detected!', {
+          description: `This QR code has been scanned ${response.data.data.scanCount} times`,
+          duration: 4000,
         });
-      } else if (response.data.data.scanCount === 1 && response.data.success) {
+      } else if (response.data.data?.scanCount === 1 && response.data.success) {
+        updateSessionStats('successfulScans');
         toast.success(response.data.message || 'Ticket validation successful!', {
-          description: 'QR code processed successfully'
+          description: 'QR code processed successfully',
+          duration: 3000,
         });
       } else {
-        toast.error(response.data.message || 'Ticket validation unsuccessful!');
+        updateSessionStats('errorScans');
+        toast.error(response.data.message || 'Ticket validation unsuccessful!', {
+          duration: 4000,
+        });
       }
 
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error on scanning!');
+      updateSessionStats('errorScans');
+      const errorMessage = error.response?.data?.message || 'Error processing QR code';
+      
+      toast.error(errorMessage, {
+        description: 'Please try scanning again',
+        duration: 4000,
+      });
+      
       console.error('API Error:', error);
+      
+      // Add error to scan results
+      const errorResult = {
+        id: Date.now(),
+        qrData,
+        timestamp: new Date().toLocaleTimeString(),
+        error: errorMessage,
+        isError: true
+      };
+      
+      setScanResults(prev => [errorResult, ...prev.slice(0, 9)]);
     } finally {
+      apiCallsInProgress.current.delete(qrData);
       setIsProcessingAPI(false);
     }
-  };
+  }, [updateSessionStats]);
 
-  const handleError = (err) => {
-    toast.error('Camera error: ' + (err?.message || err));
+  const handleError = useCallback((err) => {
+    const errorMessage = err?.message || 'Camera error occurred';
+    toast.error('Scanner Error', {
+      description: errorMessage,
+      duration: 5000,
+    });
     console.error('QR Scanner error:', err);
-  };
+  }, []);
 
-  const handleStartScanning = () => {
+  const handleStartScanning = useCallback(() => {
     setIsScanning(true);
-    setScanCount(0);
+    // Reset session stats
+    setSessionStats({
+      totalScans: 0,
+      successfulScans: 0,
+      duplicateScans: 0,
+      errorScans: 0
+    });
+    setScanResults([]);
+    apiCallsInProgress.current.clear();
     setIsProcessingAPI(false);
-  };
+    
+    toast.info('QR Scanner Started', {
+      description: 'Point your camera at QR codes to scan',
+      duration: 2000,
+    });
+  }, []);
 
-  const handleStopScanning = () => {
+  const handleStopScanning = useCallback(() => {
     setIsScanning(false);
     setIsProcessingAPI(false);
-    if (scanCount > 0) {
-      toast.success(`Scanning session ended. Total scans: ${scanCount}`);
+    apiCallsInProgress.current.clear();
+    
+    if (sessionStats.totalScans > 0) {
+      toast.success('Scanning Session Completed', {
+        description: `Total scans: ${sessionStats.totalScans} | Successful: ${sessionStats.successfulScans}`,
+        duration: 4000,
+      });
     }
-  };
+  }, [sessionStats]);
+
+  const clearScanHistory = useCallback(() => {
+    setScanResults([]);
+    setSessionStats({
+      totalScans: 0,
+      successfulScans: 0,
+      duplicateScans: 0,
+      errorScans: 0
+    });
+    toast.info('Scan history cleared');
+  }, []);
 
   return (
     <>
@@ -101,13 +190,75 @@ const HeroSection = () => {
                 {isScanning ? 'SCANNING...' : 'START QR SCAN'} <RiQrScan2Line />
               </button>
               
-              {(scanCount > 0 || isProcessingAPI) && (
-                <div className="text-sm text-gray-600 font-medium">
-                  {isProcessingAPI ? 'Processing...' : `Scanned: ${scanCount} QR codes`}
+              {/* Session Stats */}
+              {sessionStats.totalScans > 0 && (
+                <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
+                  <div className="text-sm bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-medium">
+                    Total: {sessionStats.totalScans}
+                  </div>
+                  {sessionStats.successfulScans > 0 && (
+                    <div className="text-sm bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">
+                      Success: {sessionStats.successfulScans}
+                    </div>
+                  )}
+                  {sessionStats.duplicateScans > 0 && (
+                    <div className="text-sm bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full font-medium">
+                      Duplicates: {sessionStats.duplicateScans}
+                    </div>
+                  )}
+                  {sessionStats.errorScans > 0 && (
+                    <div className="text-sm bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium">
+                      Errors: {sessionStats.errorScans}
+                    </div>
+                  )}
+                </div>
+              )}
+              
+              {isProcessingAPI && (
+                <div className="text-sm text-blue-600 font-medium animate-pulse">
+                  Processing API request...
                 </div>
               )}
             </div>
+
+            {/* Recent Scan Results */}
+            {scanResults.length > 0 && !isScanning && (
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg max-h-48 overflow-y-auto">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="font-semibold text-gray-800">Recent Scans</h3>
+                  <button
+                    onClick={clearScanHistory}
+                    className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
+                  >
+                    <RotateCcw size={12} /> Clear
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {scanResults.slice(0, 5).map((result) => (
+                    <div 
+                      key={result.id} 
+                      className={`flex justify-between items-center p-2 rounded text-xs ${
+                        result.isError 
+                          ? 'bg-red-100 text-red-800' 
+                          : result.scanCount > 1 
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : 'bg-green-100 text-green-800'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        {!result.isError && <CheckCircle size={12} />}
+                        <span className="font-mono text-xs truncate max-w-32">
+                          {result.qrData.substring(0, 20)}...
+                        </span>
+                      </div>
+                      <span>{result.timestamp}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
+
           <div className="flex items-center justify-center lg:ms-64 mt-8 lg:mt-0 h-[350px] sm:h-[400px] md:h-[500px] lg:h-[600px] xl:h-[700px] 2xl:h-[800px] w-full">
             <img
               src="Hero.svg"
@@ -121,19 +272,19 @@ const HeroSection = () => {
       {/* QR Scanner Modal */}
       {isScanning && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-auto relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-auto relative max-h-[95vh] overflow-y-auto">
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-gray-800">QR Code Scanner</h2>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {isProcessingAPI && (
                   <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium animate-pulse">
                     Processing...
                   </span>
                 )}
-                {scanCount > 0 && (
+                {sessionStats.totalScans > 0 && (
                   <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                    {scanCount} scanned
+                    {sessionStats.totalScans} scanned
                   </span>
                 )}
                 <button
@@ -152,14 +303,40 @@ const HeroSection = () => {
               onClose={handleStopScanning}
             />
             
+            {/* Real-time scan results in modal */}
+            {scanResults.length > 0 && (
+              <div className="mt-4 p-3 bg-gray-50 rounded-lg max-h-32 overflow-y-auto">
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">Latest Scans:</h4>
+                <div className="space-y-1">
+                  {scanResults.slice(0, 3).map((result) => (
+                    <div 
+                      key={result.id}
+                      className={`flex justify-between items-center p-2 rounded text-xs ${
+                        result.isError 
+                          ? 'bg-red-100 text-red-700' 
+                          : result.scanCount > 1 
+                            ? 'bg-yellow-100 text-yellow-700'
+                            : 'bg-green-100 text-green-700'
+                      }`}
+                    >
+                      <span className="font-mono truncate max-w-40">
+                        {result.qrData.substring(0, 25)}...
+                      </span>
+                      <span>{result.timestamp}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
             {/* Footer */}
             <div className="mt-4 text-center">
-              <p className="text-sm text-gray-600">
-                Scanner will remain active. Point at different QR codes to scan continuously.
+              <p className="text-sm text-gray-600 mb-3">
+                Scanner prevents duplicate API calls automatically. Point at different QR codes to continue.
               </p>
               <button
                 onClick={handleStopScanning}
-                className="mt-3 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm"
+                className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium"
               >
                 Stop Scanning
               </button>
