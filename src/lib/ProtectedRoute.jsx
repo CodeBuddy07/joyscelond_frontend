@@ -1,7 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
-import LoadingScreen from './LoadingScreen';
 import { getCurrentStaff, handleAuthError, isAuthenticated, logout } from './auth';
+import { toast } from 'sonner';
+
 
 // Protected Route Component
 export const ProtectedRoute = ({ children, requiredRole = null }) => {
@@ -24,6 +25,7 @@ export const ProtectedRoute = ({ children, requiredRole = null }) => {
           setIsAuthorized(false);
           setIsLoading(false);
           logout();
+          toast.error("You don't have permission to access this.");
           return;
         }
       }

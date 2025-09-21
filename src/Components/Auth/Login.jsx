@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, LogIn, User, Lock, Sparkles } from 'lucide-react';
 import axiosSecure from '../../lib/axiosSecure';
-
 
 export default function Login() {
   const [eventID, setEventID] = useState('');
@@ -81,79 +80,133 @@ export default function Login() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Error Message */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-          {error}
-        </div>
-      )}
-
-      {/* Event ID Field */}
-      <div>
-        <label className="block text-gray-600 text-sm mb-2">
-          Event ID
-        </label>
-        <input
-          type="eventID"
-          value={eventID}
-          onChange={(e) => setEventID(e.target.value)}
-          className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent text-gray-700 bg-gray-50"
-          placeholder="Enter your event ID"
-          required
-          disabled={isLoading}
-        />
-      </div>
-
-      {/* Password Field */}
-      <div>
-        <label className="block text-gray-600 text-sm mb-2">
-          PASSWORD
-        </label>
-        <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent text-gray-700 bg-gray-50 pr-12"
-            placeholder="Enter your password"
-            required
-            disabled={isLoading}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            disabled={isLoading}
-          >
-            {showPassword ? (
-              <EyeOff className="h-5 w-5" />
-            ) : (
-              <Eye className="h-5 w-5" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Login Button */}
-      <button
-        type="submit"
-        onClick={handleLogin}
-        disabled={isLoading}
-        className={`w-full font-medium py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 ${isLoading
-          ? 'bg-gray-400 cursor-not-allowed'
-          : 'bg-cyan-400 hover:bg-cyan-500 text-white'
-          }`}
-      >
-        {isLoading ? (
-          <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-            Logging in...
+    <div className="w-full max-w-md mx-auto p-6">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <div className="flex justify-center mb-4">
+          <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-3 rounded-full">
+            <LogIn className="h-8 w-8 text-white" />
           </div>
-        ) : (
-          'Log In'
+        </div>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Welcome Back</h2>
+        <p className="text-gray-600">Sign in to access your Event Dashboard</p>
+      </div>
+
+      <form onSubmit={handleLogin} className="space-y-6">
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm flex items-center">
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {error}
+          </div>
         )}
-      </button>
+
+        {/* Event ID Field */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Event ID
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <User className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              value={eventID}
+              onChange={(e) => setEventID(e.target.value)}
+              className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white placeholder-gray-400 text-gray-900 transition-colors duration-200"
+              placeholder="Enter your event ID"
+              required
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
+        {/* Password Field */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+          </div>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Lock className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white placeholder-gray-400 text-gray-900 transition-colors duration-200"
+              placeholder="Enter your password"
+              required
+              disabled={isLoading}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
+              disabled={isLoading}
+            >
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Login Button */}
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`w-full flex justify-center items-center py-3 px-4 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 font-medium ${
+            isLoading
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
+          }`}
+        >
+          {isLoading ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Logging in...
+            </>
+          ) : (
+            <>
+              <LogIn className="w-5 h-5 mr-2" />
+              Log In
+            </>
+          )}
+        </button>
+      </form>
+
+      {/* Divider */}
+      <div className="my-6 flex items-center">
+        <div className="flex-grow border-t border-gray-300"></div>
+        <span className="flex-shrink mx-4 text-gray-500 text-sm">or</span>
+        <div className="flex-grow border-t border-gray-300"></div>
+      </div>
+
+      {/* Additional Options */}
+      <div className="text-center">
+        <p className="text-sm text-gray-600">
+          Don't have an account?{' '}
+          <a href="#" className="font-medium text-blue-600 hover:text-blue-800 transition-colors duration-200">
+            Contact administrator
+          </a>
+        </p>
+      </div>
+
+      {/* Decorative Elements */}
+      <div className="absolute bottom-4 right-4 opacity-10">
+        <Sparkles className="h-24 w-24 text-blue-500" />
+      </div>
     </div>
   );
 }

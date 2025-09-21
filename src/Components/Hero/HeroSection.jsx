@@ -4,6 +4,7 @@ import { X, RotateCcw, CheckCircle } from 'lucide-react';
 import QrReader from './QrReader';
 import axiosSecure from '../../lib/axiosSecure';
 import { toast } from 'sonner';
+import { ProtectedRoute } from '../../lib/ProtectedRoute';
 
 const HeroSection = () => {
   const [isScanning, setIsScanning] = useState(false);
@@ -36,21 +37,21 @@ const HeroSection = () => {
     try {
       apiCallsInProgress.current.add(qrData);
       setIsProcessingAPI(true);
-      
+
       console.log('Processing QR code:', qrData);
-      
+
       // Show processing toast
       const loadingToast = toast.loading('Processing QR code...', {
         description: 'Validating ticket information'
       });
-      
+
       const response = await axiosSecure.post(qrData);
-      
+
       // Dismiss loading toast
       toast.dismiss(loadingToast);
 
       console.log('API Response:', response.data);
-      
+
       // Create scan result object
       const scanResult = {
         id: Date.now(),
@@ -62,7 +63,7 @@ const HeroSection = () => {
 
       // Add to scan results
       setScanResults(prev => [scanResult, ...prev.slice(0, 9)]); // Keep last 10 results
-      
+
       if (response.data.data?.scanCount > 1) {
         updateSessionStats('duplicateScans');
         toast.warning('Duplicate Scan Detected!', {
@@ -85,14 +86,14 @@ const HeroSection = () => {
     } catch (error) {
       updateSessionStats('errorScans');
       const errorMessage = error.response?.data?.message || 'Error processing QR code';
-      
+
       toast.error(errorMessage, {
         description: 'Please try scanning again',
         duration: 4000,
       });
-      
+
       console.error('API Error:', error);
-      
+
       // Add error to scan results
       const errorResult = {
         id: Date.now(),
@@ -101,7 +102,7 @@ const HeroSection = () => {
         error: errorMessage,
         isError: true
       };
-      
+
       setScanResults(prev => [errorResult, ...prev.slice(0, 9)]);
     } finally {
       apiCallsInProgress.current.delete(qrData);
@@ -130,7 +131,7 @@ const HeroSection = () => {
     setScanResults([]);
     apiCallsInProgress.current.clear();
     setIsProcessingAPI(false);
-    
+
     toast.info('QR Scanner Started', {
       description: 'Point your camera at QR codes to scan',
       duration: 2000,
@@ -141,7 +142,7 @@ const HeroSection = () => {
     setIsScanning(false);
     setIsProcessingAPI(false);
     apiCallsInProgress.current.clear();
-    
+
     if (sessionStats.totalScans > 0) {
       toast.success('Scanning Session Completed', {
         description: `Total scans: ${sessionStats.totalScans} | Successful: ${sessionStats.successfulScans}`,
@@ -174,22 +175,24 @@ const HeroSection = () => {
               </span>
             </h1>
             <p className="mt-6 mb-8 text-lg sm:mb-12">
-              Continuously scan multiple QR codes without interruption. 
+              Continuously scan multiple QR codes without interruption.
               Perfect for events, ticket validation, and inventory management.
             </p>
             <div className="flex flex-col space-y-4 sm:items-center items-center sm:justify-center sm:flex-row sm:space-y-0 sm:space-x-4 lg:justify-start">
-              <button
-                onClick={handleStartScanning}
-                disabled={isScanning}
-                className={`flex items-center gap-2 px-8 py-3 text-lg text-center font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 ${
-                  isScanning 
-                    ? 'bg-gray-400 cursor-not-allowed' 
-                    : 'bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] hover:shadow-lg'
-                }`}
-              >
-                {isScanning ? 'SCANNING...' : 'START QR SCAN'} <RiQrScan2Line />
-              </button>
-              
+              <ProtectedRoute requiredRole="STAFF">
+                <button
+                  onClick={handleStartScanning}
+                  disabled={isScanning}
+                  className={`flex items-center gap-2 px-8 py-3 text-lg text-center font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 ${isScanning
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] hover:shadow-lg'
+                    }`}
+                >
+                  {isScanning ? 'SCANNING...' : 'START QR SCAN'} <RiQrScan2Line />
+                </button>
+              </ProtectedRoute>
+
+
               {/* Session Stats */}
               {sessionStats.totalScans > 0 && (
                 <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
@@ -213,7 +216,7 @@ const HeroSection = () => {
                   )}
                 </div>
               )}
-              
+
               {isProcessingAPI && (
                 <div className="text-sm text-blue-600 font-medium animate-pulse">
                   Processing API request...
@@ -235,15 +238,14 @@ const HeroSection = () => {
                 </div>
                 <div className="space-y-2">
                   {scanResults.slice(0, 5).map((result) => (
-                    <div 
-                      key={result.id} 
-                      className={`flex justify-between items-center p-2 rounded text-xs ${
-                        result.isError 
-                          ? 'bg-red-100 text-red-800' 
-                          : result.scanCount > 1 
+                    <div
+                      key={result.id}
+                      className={`flex justify-between items-center p-2 rounded text-xs ${result.isError
+                          ? 'bg-red-100 text-red-800'
+                          : result.scanCount > 1
                             ? 'bg-yellow-100 text-yellow-800'
                             : 'bg-green-100 text-green-800'
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-2">
                         {!result.isError && <CheckCircle size={12} />}
@@ -296,28 +298,27 @@ const HeroSection = () => {
                 </button>
               </div>
             </div>
-            
+
             <QrReader
               onScan={handleScan}
               onError={handleError}
               onClose={handleStopScanning}
             />
-            
+
             {/* Real-time scan results in modal */}
             {scanResults.length > 0 && (
               <div className="mt-4 p-3 bg-gray-50 rounded-lg max-h-32 overflow-y-auto">
                 <h4 className="text-sm font-semibold text-gray-700 mb-2">Latest Scans:</h4>
                 <div className="space-y-1">
                   {scanResults.slice(0, 3).map((result) => (
-                    <div 
+                    <div
                       key={result.id}
-                      className={`flex justify-between items-center p-2 rounded text-xs ${
-                        result.isError 
-                          ? 'bg-red-100 text-red-700' 
-                          : result.scanCount > 1 
+                      className={`flex justify-between items-center p-2 rounded text-xs ${result.isError
+                          ? 'bg-red-100 text-red-700'
+                          : result.scanCount > 1
                             ? 'bg-yellow-100 text-yellow-700'
                             : 'bg-green-100 text-green-700'
-                      }`}
+                        }`}
                     >
                       <span className="font-mono truncate max-w-40">
                         {result.qrData.substring(0, 25)}...
@@ -328,7 +329,7 @@ const HeroSection = () => {
                 </div>
               </div>
             )}
-            
+
             {/* Footer */}
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-600 mb-3">

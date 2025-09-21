@@ -6,6 +6,8 @@ export const logout = async () => {
     // Clear all authentication data from localStorage
     localStorage.removeItem('Authorization');
     localStorage.removeItem('staffInfo');
+
+    window.location.href = '/';
     
     console.log('Logout successful');
   } catch (error) {

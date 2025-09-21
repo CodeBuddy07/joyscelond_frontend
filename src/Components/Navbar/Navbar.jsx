@@ -6,6 +6,8 @@ import FAQ from '../FQA/Fqa';
 import TestimonialSection from '../TestimonialSection/TestimonialSection';
 import Footer from '../Footer/Footer';
 import ContactForm from '../../Components/ContactFrom/contactFrom'
+import Login from '../Auth/Login';
+import { isAuthenticated, logout } from '../../lib/auth';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -76,12 +78,46 @@ const Navbar = () => {
 
           {/* Desktop Log In Button */}
           <div className="hidden md:flex items-center">
-            <button
-              onClick={() => setLoginOpen(true)}
-              className="px-5 py-2 font-semibold text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg shadow-md hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:-translate-y-0.5"
-            >
-              Log In
-            </button>
+                        {
+              isAuthenticated() ? (
+                <button
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-gradient-to-r from-red-500 to-orange-500 rounded-xl shadow-lg hover:from-red-600 hover:to-orange-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:shadow-inner group"
+                  onClick={() => {
+                    // Add your logout function here
+                    logout();
+                  }}
+                >
+                  <svg
+                    className="w-5 h-5 group-hover:scale-110 transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Log Out
+                </button>
+              ) : (
+                <button
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl shadow-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:shadow-inner group"
+                  onClick={() => {
+                    setLoginOpen(true);
+                  }}
+                >
+                  <svg
+                    className="w-5 h-5 group-hover:scale-110 transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                  </svg>
+                  Log In
+                </button>
+              )
+            }
           </div>
 
           {/* Mobile Menu Button */}
@@ -138,15 +174,52 @@ const Navbar = () => {
               </a>
             </nav>
 
-            <button
-              className="w-full px-6 py-3 font-semibold text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg shadow-md hover:from-blue-600 hover:to-cyan-600 transition-colors duration-300 mt-6"
-              onClick={() => {
-                setMenuOpen(false);
-                setLoginOpen(true);
-              }}
-            >
-              Log In
-            </button>
+            {
+              console.log(isAuthenticated())
+            }
+
+            {
+              isAuthenticated() ? (
+                <button
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-gradient-to-r from-red-500 to-orange-500 rounded-xl shadow-lg hover:from-red-600 hover:to-orange-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:shadow-inner group"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    // Add your logout function here
+                    logout();
+                  }}
+                >
+                  <svg
+                    className="w-5 h-5 group-hover:scale-110 transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Log Out
+                </button>
+              ) : (
+                <button
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl shadow-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:shadow-inner group"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setLoginOpen(true);
+                  }}
+                >
+                  <svg
+                    className="w-5 h-5 group-hover:scale-110 transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                  </svg>
+                  Log In
+                </button>
+              )
+            }
           </div>
         </div>
       </div>
@@ -166,34 +239,7 @@ const Navbar = () => {
 
             {/* Login Form Component */}
             <div className="mt-2">
-              <h2 className="text-2xl font-bold text-center mb-6">Log In to Your Account</h2>
-              <form className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Event ID</label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-                    placeholder="Enter your Event ID"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                  <input
-                    type="password"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-                    placeholder="Enter your password"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-cyan-600 transition-all duration-300"
-                >
-                  Log In
-                </button>
-                <div className="text-center text-sm text-gray-500 mt-4">
-                  Don't have an credentials? <a href="#" className="text-blue-500 hover:underline">Ask Admin</a>
-                </div>
-              </form>
+              <Login closeLogin={closeLogin} />
             </div>
           </div>
         </div>
