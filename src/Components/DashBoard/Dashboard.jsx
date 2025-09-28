@@ -67,20 +67,20 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
               <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
                 Basic Information
               </h3>
-              
+
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="font-medium text-gray-700">Ticket ID:</span>
                   <span className="text-gray-900">{attendee.ticketID}</span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span className="font-medium text-gray-700">Status:</span>
                   <span className={`font-semibold ${getStatusColor(attendee)}`}>
                     {getStatus(attendee)}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span className="font-medium text-gray-700">Blocked:</span>
                   <span className={attendee.isBlocked ? 'text-red-600' : 'text-green-600'}>
@@ -94,7 +94,7 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
               <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
                 Security & Timing
               </h3>
-              
+
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="font-medium text-gray-700">Secure Token:</span>
@@ -102,14 +102,14 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
                     {attendee.secureToken}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span className="font-medium text-gray-700">Created At:</span>
                   <span className="text-gray-900 text-sm">
                     {formatDateTime(attendee.createdAt)}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span className="font-medium text-gray-700">Updated At:</span>
                   <span className="text-gray-900 text-sm">
@@ -232,6 +232,7 @@ const Dashboard = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [selectedAttendee, setSelectedAttendee] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const ticketsPerPage = 10;
 
   const handlePageChange = (newPage) => {
@@ -266,39 +267,46 @@ const Dashboard = () => {
 
   const handleBlockToggle = async (ticketID, block) => {
     try {
+      setLoading(true);
       const response = await axiosSecure.patch(`/api/v1/ticket/block/${ticketID}`, { block });
-      console.log(response);
       if (response.data.success) {
         fetchAttendees();
+        setLoading(false);
       } else {
         console.error('Failed to block/unblock ticket:', response.data.message);
+        setLoading(false);
       }
     } catch (error) {
       console.error('Error blocking/unblocking ticket:', error);
+      setLoading(false);
     }
   };
 
   const handleManualScan = async (secret) => {
     try {
-      const response = await axiosSecure.post(`/api/v1/ticket/validate/${eventID}:${secret}`,{method: 'scan'});
+      setLoading(true);
+      const response = await axiosSecure.post(`/api/v1/ticket/validate/${eventID}:${secret}`, { method: 'scan' });
       fetchAttendees();
-      console.log(response);
       if (response.data.data?.scanCount > 1) {
+        setLoading(false);
         toast.warning('Duplicate Scan Detected!', {
           description: `This QR code has been scanned ${response.data.data.scanCount} times`,
           duration: 4000,
         });
       } else if (response.data.data?.scanCount === 1 && response.data.success) {
+        setLoading(false);
         toast.success(response.data.message || 'Ticket validation successful!', {
           description: 'QR code processed successfully',
           duration: 3000,
         });
       } else {
+        setLoading(false);
         toast.error(response.data.message || 'Ticket validation unsuccessful!', {
           duration: 4000,
         });
       }
     } catch (error) {
+      setLoading(false);
       toast.error(error.response.data.message || 'Ticket validation unsuccessful!', {
         duration: 4000,
       });
@@ -308,25 +316,29 @@ const Dashboard = () => {
 
   const handleManualDeScan = async (secret) => {
     try {
-      const response = await axiosSecure.post(`/api/v1/ticket/validate/${eventID}:${secret}`,{method: 'deScan'});
+      setLoading(true);
+      const response = await axiosSecure.post(`/api/v1/ticket/validate/${eventID}:${secret}`, { method: 'deScan' });
       fetchAttendees();
-      console.log(response);
       if (response.data.data?.scanCount > 1) {
+        setLoading(false);
         toast.warning('Duplicate De-Scan Detected!', {
           description: `This QR code has been scanned ${response.data.data.scanCount} times`,
           duration: 4000,
         });
       } else if (response.data.data?.scanCount === 1 && response.data.success) {
+        setLoading(false);
         toast.success(response.data.message || 'Ticket De-Scan successful!', {
           description: 'QR code processed successfully',
           duration: 3000,
         });
       } else {
+        setLoading(false);
         toast.error(response.data.message || 'Ticket De-Scan unsuccessful!', {
           duration: 4000,
         });
       }
     } catch (error) {
+      setLoading(false);
       toast.error(error.response.data.message || 'Ticket De-Scan unsuccessful!', {
         duration: 4000,
       });
@@ -414,50 +426,72 @@ const Dashboard = () => {
             </div>
 
             {/* Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+              <table className="min-w-full divide-y divide-gray-200">
                 {/* Table Header */}
-                <thead>
-                  <tr className="bg-cyan-400 text-white">
-                    <th className="px-6 py-4 text-left text-sm font-semibold rounded-l-lg">
+                <thead className="bg-cyan-500">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider rounded-tl-lg">
                       Count
                     </th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold">
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider">
                       Ticket Number
                     </th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold rounded-r-lg">
-                      Active
+                    <th className="px-4 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider rounded-tr-lg">
+                      Actions
                     </th>
                   </tr>
                 </thead>
+
                 {/* Table Body */}
-                <tbody className="bg-white">
+                <tbody className="bg-white divide-y divide-gray-200">
                   {attendees.map((attendee, index) => (
-                    <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                    <tr key={index} className="hover:bg-gray-50 transition-colors duration-150">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 ">
                         {(currentPage - 1) * ticketsPerPage + (index + 1)}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900 text-center">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
                         {attendee.ticketID}
                       </td>
-                      <td className="px-6 py-4 text-center flex items-center justify-center gap-2">
-                        <button onClick={() => handleBlockToggle(attendee._id, !attendee.isBlocked)} className="inline-flex text-nowrap items-center px-4 py-1 border border-red-300 text-red-600 text-sm font-medium rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
-                          {attendee.isBlocked ? 'Activate' : 'Block'}
-                        </button>
+                      <td className="px-4 py-4">
+                        {loading ? (
+                          <div className="flex justify-center">
+                            <div className="animate-pulse bg-gray-200 h-9 rounded-full w-[110px] "></div>
+                          </div>
+                        ) : (
+                          <div className="flex flex-wrap justify-center gap-2">
+                            <button
+                              onClick={() => handleBlockToggle(attendee._id, !attendee.isBlocked)}
+                              className={`inline-flex items-center justify-center px-4 py-2 border text-sm font-medium rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 min-w-[110px] ${attendee.isBlocked
+                                  ? 'bg-red-100 text-red-800 border-red-300 hover:bg-red-200 focus:ring-red-500'
+                                  : 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200 focus:ring-green-500'
+                                }`}
+                            >
+                              {attendee.isBlocked ? 'Activate' : 'Block'}
+                            </button>
 
-                        <button onClick={() => handleManualScan(attendee.secureToken)} className="inline-flex text-nowrap items-center px-4 py-1 border border-green-300 text-green-600 text-sm font-medium rounded-full hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
-                          Manual Scan {attendee.scanLogs.length > 0 && `(${attendee.scanLogs.length})`}
-                        </button>
-                        <button onClick={() => handleManualDeScan(attendee.secureToken)} className="inline-flex text-nowrap items-center px-4 py-1 border border-red-300 text-red-600 text-sm font-medium rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
-                          Manual De-Scan {attendee.deScanLogs.length > 0 && `(${attendee.deScanLogs.length})`}
-                        </button>
+                            <button
+                              onClick={() => handleManualScan(attendee.secureToken)}
+                              className="inline-flex items-center justify-center px-4 py-2 border border-green-300 text-green-700 text-sm font-medium rounded-full hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 transition-colors min-w-[110px]"
+                            >
+                              Scan {attendee.scanLogs.length > 0 && `(${attendee.scanLogs.length})`}
+                            </button>
 
-                        <button 
-                          onClick={() => handleDetailsClick(attendee)}
-                          className="inline-flex items-center px-4 py-1 border border-yellow-300 text-nowrap text-yellow-600 text-sm font-medium rounded-full hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition-colors"
-                        >
-                          Details
-                        </button>
+                            <button
+                              onClick={() => handleManualDeScan(attendee.secureToken)}
+                              className="inline-flex items-center justify-center px-4 py-2 border border-red-300 text-red-700 text-sm font-medium rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-colors min-w-[110px]"
+                            >
+                              De-Scan {attendee.deScanLogs.length > 0 && `(${attendee.deScanLogs.length})`}
+                            </button>
+
+                            <button
+                              onClick={() => handleDetailsClick(attendee)}
+                              className="inline-flex items-center justify-center px-4 py-2 border border-yellow-300 text-yellow-700 text-sm font-medium rounded-full hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-1 transition-colors min-w-[110px]"
+                            >
+                              Details
+                            </button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}
