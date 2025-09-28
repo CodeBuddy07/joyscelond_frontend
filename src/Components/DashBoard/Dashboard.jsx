@@ -87,20 +87,6 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
                     {attendee.isBlocked ? 'Yes' : 'No'}
                   </span>
                 </div>
-                
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">Used:</span>
-                  <span className={attendee.isUsed ? 'text-green-600' : 'text-yellow-600'}>
-                    {attendee.isUsed ? 'Yes' : 'No'}
-                  </span>
-                </div>
-                
-                <div className="flex justify-between">
-                  <span className="font-medium text-gray-700">De-Scanned:</span>
-                  <span className={attendee.deScanned ? 'text-blue-600' : 'text-gray-600'}>
-                    {attendee.deScanned ? 'Yes' : 'No'}
-                  </span>
-                </div>
               </div>
             </div>
 
@@ -211,7 +197,7 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
           {/* Summary */}
           <div className="bg-gray-50 p-4 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">Summary</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div className="grid grid-cols-2 gap-4 text-center">
               <div className="bg-white p-3 rounded shadow-sm">
                 <div className="text-2xl font-bold text-green-600">{attendee.scanLogs?.length || 0}</div>
                 <div className="text-sm text-gray-600">Total Entries</div>
@@ -219,14 +205,6 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
               <div className="bg-white p-3 rounded shadow-sm">
                 <div className="text-2xl font-bold text-blue-600">{attendee.deScanLogs?.length || 0}</div>
                 <div className="text-sm text-gray-600">Total Exits</div>
-              </div>
-              <div className="bg-white p-3 rounded shadow-sm">
-                <div className="text-2xl font-bold text-purple-600">{attendee.__v}</div>
-                <div className="text-sm text-gray-600">Version</div>
-              </div>
-              <div className="bg-white p-3 rounded shadow-sm">
-                <div className="text-2xl font-bold text-orange-600">{attendee._id ? 'Yes' : 'No'}</div>
-                <div className="text-sm text-gray-600">Has ID</div>
               </div>
             </div>
           </div>
