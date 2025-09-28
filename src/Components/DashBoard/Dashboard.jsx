@@ -5,12 +5,255 @@ import axiosSecure from '../../lib/axiosSecure';
 import Pagination from '../../lib/Pagination';
 import { toast } from 'sonner';
 
+function formatDateTime(date) {
+  const x = new Date(date); // Convert the string date into a Date object
+
+  const options = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  };
+
+  // Correct usage of toLocaleString with options
+  return x.toLocaleString('en-US', options);
+}
+
+// Modal Component
+const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
+  if (!isOpen || !attendee) return null;
+
+
+
+  const getStatus = (attendee) => {
+    if (attendee.isBlocked) return 'Blocked';
+    if (attendee.isUsed) return 'Present';
+    return 'Absent';
+  };
+
+  const getStatusColor = (attendee) => {
+    if (attendee.isBlocked) return 'text-red-600';
+    if (attendee.isUsed) return 'text-green-600';
+    return 'text-yellow-600';
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        {/* Modal Header */}
+        <div className="flex justify-between items-center p-6 border-b border-gray-200">
+          <h2 className="text-2xl font-bold text-gray-900">
+            Attendee Details - {attendee.ticketID}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Modal Content */}
+        <div className="p-6 space-y-6">
+          {/* Basic Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+                Basic Information
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Ticket ID:</span>
+                  <span className="text-gray-900">{attendee.ticketID}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Status:</span>
+                  <span className={`font-semibold ${getStatusColor(attendee)}`}>
+                    {getStatus(attendee)}
+                  </span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Blocked:</span>
+                  <span className={attendee.isBlocked ? 'text-red-600' : 'text-green-600'}>
+                    {attendee.isBlocked ? 'Yes' : 'No'}
+                  </span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Used:</span>
+                  <span className={attendee.isUsed ? 'text-green-600' : 'text-yellow-600'}>
+                    {attendee.isUsed ? 'Yes' : 'No'}
+                  </span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">De-Scanned:</span>
+                  <span className={attendee.deScanned ? 'text-blue-600' : 'text-gray-600'}>
+                    {attendee.deScanned ? 'Yes' : 'No'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+                Security & Timing
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Secure Token:</span>
+                  <span className="text-xs text-gray-600 font-mono bg-gray-100 px-2 py-1 rounded">
+                    {attendee.secureToken}
+                  </span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Created At:</span>
+                  <span className="text-gray-900 text-sm">
+                    {formatDateTime(attendee.createdAt)}
+                  </span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-700">Updated At:</span>
+                  <span className="text-gray-900 text-sm">
+                    {formatDateTime(attendee.updatedAt)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Scan Logs */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+                Entry Scans ({attendee.scanLogs?.length || 0})
+              </h3>
+              <div className="space-y-2 max-h-40 overflow-y-auto">
+                {attendee.scanLogs?.length > 0 ? (
+                  attendee.scanLogs.map((log, index) => (
+                    <div key={index} className="flex justify-between items-center p-2 bg-green-50 rounded">
+                      <span className="text-sm font-medium text-green-800">
+                        Scan #{index + 1}
+                      </span>
+                      <span className="text-xs text-green-600">
+                        {formatDateTime(log)}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-sm text-center py-2">No scan logs available</p>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+                Exit Scans ({attendee.deScanLogs?.length || 0})
+              </h3>
+              <div className="space-y-2 max-h-40 overflow-y-auto">
+                {attendee.deScanLogs?.length > 0 ? (
+                  attendee.deScanLogs.map((log, index) => (
+                    <div key={index} className="flex justify-between items-center p-2 bg-blue-50 rounded">
+                      <span className="text-sm font-medium text-blue-800">
+                        De-Scan #{index + 1}
+                      </span>
+                      <span className="text-xs text-blue-600">
+                        {formatDateTime(log)}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-sm text-center py-2">No de-scan logs available</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* QR Code Information */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+              QR Code Information
+            </h3>
+            {/* <div className="space-y-3">
+              <div className="flex justify-between items-start">
+                <span className="font-medium text-gray-700">QR Link:</span>
+                <a 
+                  href={attendee.qrLink} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 text-sm break-all max-w-xs text-right"
+                >
+                  {attendee.qrLink}
+                </a>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-700">QR Code Available:</span>
+                <span className={attendee.qr ? 'text-green-600' : 'text-red-600'}>
+                  {attendee.qr ? 'Yes' : 'No'}
+                </span>
+              </div>
+            </div> */}
+          </div>
+
+          {/* Summary */}
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Summary</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div className="bg-white p-3 rounded shadow-sm">
+                <div className="text-2xl font-bold text-green-600">{attendee.scanLogs?.length || 0}</div>
+                <div className="text-sm text-gray-600">Total Entries</div>
+              </div>
+              <div className="bg-white p-3 rounded shadow-sm">
+                <div className="text-2xl font-bold text-blue-600">{attendee.deScanLogs?.length || 0}</div>
+                <div className="text-sm text-gray-600">Total Exits</div>
+              </div>
+              <div className="bg-white p-3 rounded shadow-sm">
+                <div className="text-2xl font-bold text-purple-600">{attendee.__v}</div>
+                <div className="text-sm text-gray-600">Version</div>
+              </div>
+              <div className="bg-white p-3 rounded shadow-sm">
+                <div className="text-2xl font-bold text-orange-600">{attendee._id ? 'Yes' : 'No'}</div>
+                <div className="text-sm text-gray-600">Has ID</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal Footer */}
+        <div className="flex justify-end p-6 border-t border-gray-200">
+          <button
+            onClick={onClose}
+            className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const eventID = JSON.parse(localStorage.getItem('staffInfo'))?.eventID || 'event-id-not-found';
   const [attendees, setAttendees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [selectedAttendee, setSelectedAttendee] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const ticketsPerPage = 10;
 
   const handlePageChange = (newPage) => {
@@ -33,6 +276,15 @@ const Dashboard = () => {
     }
   };
 
+  const handleDetailsClick = (attendee) => {
+    setSelectedAttendee(attendee);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedAttendee(null);
+  };
 
   const handleBlockToggle = async (ticketID, block) => {
     try {
@@ -50,7 +302,8 @@ const Dashboard = () => {
 
   const handleManualScan = async (secret) => {
     try {
-      const response = await axiosSecure.post(`/api/v1/ticket/validate/${eventID}:${secret}`);
+      const response = await axiosSecure.post(`/api/v1/ticket/validate/${eventID}:${secret}`,{method: 'scan'});
+      fetchAttendees();
       console.log(response);
       if (response.data.data?.scanCount > 1) {
         toast.warning('Duplicate Scan Detected!', {
@@ -72,6 +325,34 @@ const Dashboard = () => {
         duration: 4000,
       });
       console.error('Error manual scan: ', error);
+    }
+  };
+
+  const handleManualDeScan = async (secret) => {
+    try {
+      const response = await axiosSecure.post(`/api/v1/ticket/validate/${eventID}:${secret}`,{method: 'deScan'});
+      fetchAttendees();
+      console.log(response);
+      if (response.data.data?.scanCount > 1) {
+        toast.warning('Duplicate De-Scan Detected!', {
+          description: `This QR code has been scanned ${response.data.data.scanCount} times`,
+          duration: 4000,
+        });
+      } else if (response.data.data?.scanCount === 1 && response.data.success) {
+        toast.success(response.data.message || 'Ticket De-Scan successful!', {
+          description: 'QR code processed successfully',
+          duration: 3000,
+        });
+      } else {
+        toast.error(response.data.message || 'Ticket De-Scan unsuccessful!', {
+          duration: 4000,
+        });
+      }
+    } catch (error) {
+      toast.error(error.response.data.message || 'Ticket De-Scan unsuccessful!', {
+        duration: 4000,
+      });
+      console.error('Error manual De-Scan: ', error);
     }
   };
 
@@ -132,47 +413,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Chart Section */}
-          {/* <div className="mt-12 bg-white rounded-lg shadow-md p-6 sm:p-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 text-center mb-8">
-              Event Attendees chart
-            </h2>
-            <div className="h-80 sm:h-96">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={chartData}
-                  margin={{
-                    top: 20,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis
-                    dataKey="time"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 12, fill: '#666' }}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 12, fill: '#666' }}
-                    domain={[0, 500]}
-                    ticks={[20, 50, 300, 500]}
-                  />
-                  <Bar
-                    dataKey="attendees"
-                    fill="#22d3ee"
-                    radius={[4, 4, 0, 0]}
-                    barSize={60}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div> */}
-
           {/* Attendees List Section */}
           <div className="mt-12 bg-white rounded-lg shadow-md p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -223,12 +463,22 @@ const Dashboard = () => {
                         {attendee.ticketID}
                       </td>
                       <td className="px-6 py-4 text-center flex items-center justify-center gap-2">
-                        <button onClick={() => handleBlockToggle(attendee._id, !attendee.isBlocked)} className="inline-flex items-center px-4 py-1 border border-red-300 text-red-600 text-sm font-medium rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+                        <button onClick={() => handleBlockToggle(attendee._id, !attendee.isBlocked)} className="inline-flex text-nowrap items-center px-4 py-1 border border-red-300 text-red-600 text-sm font-medium rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
                           {attendee.isBlocked ? 'Activate' : 'Block'}
                         </button>
 
-                        <button onClick={() => handleManualScan(attendee.secureToken)} className="inline-flex items-center px-4 py-1 border border-green-300 text-green-600 text-sm font-medium rounded-full hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
-                          Manual Scan
+                        <button onClick={() => handleManualScan(attendee.secureToken)} className="inline-flex text-nowrap items-center px-4 py-1 border border-green-300 text-green-600 text-sm font-medium rounded-full hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                          Manual Scan {attendee.scanLogs.length > 0 && `(${attendee.scanLogs.length})`}
+                        </button>
+                        <button onClick={() => handleManualDeScan(attendee.secureToken)} className="inline-flex text-nowrap items-center px-4 py-1 border border-red-300 text-red-600 text-sm font-medium rounded-full hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
+                          Manual De-Scan {attendee.deScanLogs.length > 0 && `(${attendee.deScanLogs.length})`}
+                        </button>
+
+                        <button 
+                          onClick={() => handleDetailsClick(attendee)}
+                          className="inline-flex items-center px-4 py-1 border border-yellow-300 text-nowrap text-yellow-600 text-sm font-medium rounded-full hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition-colors"
+                        >
+                          Details
                         </button>
                       </td>
                     </tr>
@@ -281,6 +531,13 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
+        {/* Details Modal */}
+        <AttendeeDetailsModal
+          attendee={selectedAttendee}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+        />
       </div>
     </ProtectedRoute>
   );
