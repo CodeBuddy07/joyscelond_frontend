@@ -9,7 +9,7 @@ function App() {
     <div className=' scroll-smooth ' >
 
       <Navbar />
-
+    
       <Toaster richColors position='top-center ' />
       
     </div>
