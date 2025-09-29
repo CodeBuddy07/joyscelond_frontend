@@ -226,8 +226,8 @@ const HeroSection = () => {
           <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-auto relative">
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">
-                QR Code {method === 'scan' ? 'Scanner' : 'De-Scanner'}
+              <h2 className="lg:text-xl text-lg font-semibold text-gray-800 text-nowrap">
+                QR Code Scanner
               </h2>
               <div className="flex items-center gap-2">
                 {isProcessingAPI && (
@@ -235,7 +235,7 @@ const HeroSection = () => {
                     Processing...
                   </span>
                 )}
-                <span className={`${method === 'scan' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} px-3 py-1 rounded-full text-sm font-medium`}>
+                <span className={`${method === 'scan' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} px-3 py-1 rounded-full text-nowrap lg:text-sm text-xs font-medium`}>
                   {method === 'scan' ? 'Scan Mode' : 'De-Scan Mode'}
                 </span>
                 <button

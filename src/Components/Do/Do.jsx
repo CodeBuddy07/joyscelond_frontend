@@ -103,7 +103,7 @@ function Do() {
 
         <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center space-y-3 sm:space-y-0 sm:space-x-3 md:space-x-4 w-full max-w-md sm:max-w-none">
           <div className="text-center">
-            <p className="leading-tight text-lg sm:text-xl md:text-2xl  font-medium">JOY</p>
+            <p className="leading-tight text-lg sm:text-xl md:text-2xl  font-medium">Joyscelon</p>
             <p className="text-sm sm:text-base md:text-lg leading-tight dark:text-gray-700">Founder, KUTMASTERZ </p>
             <button
               onClick={toggleStory}
