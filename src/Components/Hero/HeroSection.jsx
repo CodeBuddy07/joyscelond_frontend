@@ -28,8 +28,8 @@ const HeroSection = () => {
         description: 'Validating ticket information'
       });
 
-      const response = await axiosSecure.post(qrData, { 
-        method: 'scan' 
+      const response = await axiosSecure.post(qrData, {
+        method: 'scan'
       });
 
       toast.dismiss(loadingToast);
@@ -78,8 +78,8 @@ const HeroSection = () => {
         description: 'Validating ticket information for de-scan'
       });
 
-      const response = await axiosSecure.post(qrData, { 
-        method: 'deScan' 
+      const response = await axiosSecure.post(qrData, {
+        method: 'deScan'
       });
 
       toast.dismiss(loadingToast);
@@ -170,7 +170,7 @@ const HeroSection = () => {
       <section className="dark:bg-gray-100 dark:text-gray-800">
         <div className="mt-10 md:mt-16 lg:mt-0 w-full flex flex-col justify-center sm:py-12 lg:py-32 lg:flex-row lg:justify-between xl:gap-72">
           <div className="flex flex-col justify-center lg:p-0 md:p-0 p-6 lg:ps-32 text-center rounded-sm lg:max-w-md xl:max-w-lg lg:text-left">
-            <h1 className="text-5xl font-bold leading-none sm:text-6xl">
+            {/* <h1 className="text-5xl font-bold leading-none sm:text-6xl">
               Scan & De-Scan
               <br />
               <span className="bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] bg-clip-text text-transparent">
@@ -180,17 +180,23 @@ const HeroSection = () => {
             <p className="mt-6 mb-8 text-lg sm:mb-12">
               Continuously scan and de-scan multiple QR codes without interruption.
               Perfect for events, ticket validation, entry-exit management, and inventory control.
+            </p> */}
+
+            <h1 className='text-5xl font-bold'>Validator</h1>
+            <h2 className='text-5xl font-bold bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] bg-clip-text text-transparent'>Scan to validate</h2>
+            <p className="mt-6 mb-8 text-lg sm:mb-12 text-nowrap">
+              Safer, Faster, Smarter way to validate your event attendees.
             </p>
+
             <div className="flex flex-col space-y-4 sm:items-center items-center sm:justify-center sm:flex-row sm:space-y-0 sm:space-x-4 lg:justify-start">
               <ProtectedRoute requiredRole="STAFF">
                 <button
                   onClick={handleStartScanning}
                   disabled={isScanning}
-                  className={`flex items-center gap-2 px-8 py-3 text-lg text-center font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 ${
-                    isScanning
+                  className={`flex items-center gap-2 px-8 py-3 text-lg text-center font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 ${isScanning
                       ? 'bg-gray-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] hover:shadow-lg text-white'
-                  }`}
+                    }`}
                 >
                   {isScanning ? 'SCANNING...' : 'START QR SCANNER'} <RiQrScan2Line />
                 </button>
@@ -253,21 +259,19 @@ const HeroSection = () => {
             <div className="flex gap-2 mt-4">
               <button
                 onClick={() => switchMethod('scan')}
-                className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
-                  method === 'scan'
+                className={`flex-1 py-2 rounded-lg font-medium transition-colors ${method === 'scan'
                     ? 'bg-green-500 text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
+                  }`}
               >
                 Scan Mode
               </button>
               <button
                 onClick={() => switchMethod('deScan')}
-                className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
-                  method === 'deScan'
+                className={`flex-1 py-2 rounded-lg font-medium transition-colors ${method === 'deScan'
                     ? 'bg-red-500 text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
+                  }`}
               >
                 De-Scan Mode
               </button>
@@ -276,7 +280,7 @@ const HeroSection = () => {
             {/* Footer */}
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-600">
-                {method === 'scan' 
+                {method === 'scan'
                   ? 'Scan mode: Prevents duplicate scans. You can de-scan the same QR code.'
                   : 'De-scan mode: Prevents duplicate de-scans. You can scan the same QR code.'
                 }
