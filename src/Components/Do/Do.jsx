@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 // CountUp component simulation since we don't have the library
 const CountUp = ({ end, duration, suffix = '' }) => {
   const [count, setCount] = useState(0);
-  
+
   useEffect(() => {
     let start = 0;
     const increment = end / (duration * 60); // 60fps
@@ -16,10 +16,10 @@ const CountUp = ({ end, duration, suffix = '' }) => {
         setCount(Math.floor(start));
       }
     }, 1000 / 60);
-    
+
     return () => clearInterval(timer);
   }, [end, duration]);
-  
+
   return <span>{count}{suffix}</span>;
 };
 
@@ -60,7 +60,7 @@ function Do() {
     <section className="my-4 sm:my-6 md:my-8 lg:-mt-0 dark:bg-gray-100 dark:text-gray-800 px-2 sm:px-4">
 
       {/* Stats */}
-      <div className="mt-4 sm:mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+      <div className="mt-4 sm:mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         <div className="text-center p-4 sm:p-6 md:p-8 bg-gray-50 rounded-lg flex flex-col items-center justify-center">
           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-violet-600 mb-1 sm:mb-2">
             <CountUp end={150} duration={2} suffix="+" />
@@ -81,6 +81,13 @@ function Do() {
           </div>
           <div className="text-sm sm:text-base text-gray-600">Years Strong</div>
         </div>
+
+        <div className="text-center p-4 sm:p-6 md:p-8 bg-gray-50 rounded-lg flex flex-col items-center justify-center sm:col-span-2 md:col-span-1">
+          <div className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-400 mb-1 sm:mb-2">
+            <CountUp end={98000} duration={2} />
+          </div>
+          <div className="text-sm sm:text-base text-gray-600">Tickets Printed</div>
+        </div>
       </div>
 
       <div className="flex flex-col items-center p-2 sm:p-4 md:p-8 mx-auto space-y-4 sm:space-y-6 max-w-7xl">
@@ -90,8 +97,9 @@ function Do() {
         </svg>
 
         <p className="px-3 sm:px-4 md:px-6 py-2 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold sm:font-bold text-center max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-6xl dark:text-gray-700 leading-tight sm:leading-normal">
-          "Success is not final, failure is not fatal: it is the courage to continue that counts. Every setback taught me that persistence and passion can overcome any obstacle."
+          “Trust but verify”
         </p>
+        <p className="leading-tight text-lg sm:text-xl md:text-2xl  font-medium">Ronald Reagan</p>
 
         <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center space-y-3 sm:space-y-0 sm:space-x-3 md:space-x-4 w-full max-w-md sm:max-w-none">
           <div className="text-center">
@@ -115,17 +123,17 @@ function Do() {
               <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 md:mb-4 text-gray-800">The KUTMASTERZ Journey</h3>
 
               <p className="mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base text-gray-700 leading-relaxed">
-               Founded in 2014, KUTMASTERZ started as a passionate hobby dedicated to crafting unique decals and stickers. Over the years, we have evolved into a dynamic limited company, firmly established in the design and printing industry. Our mission is to deliver high-quality printing solutions that combine sophistication with affordability. 
+                Founded in 2014, KUTMASTERZ started as a passionate hobby dedicated to crafting unique decals and stickers. Over the years, we have evolved into a dynamic limited company, firmly established in the design and printing industry. Our mission is to deliver high-quality printing solutions that combine sophistication with affordability.
               </p>
 
               <p className="mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base text-gray-700 leading-relaxed">
-               Specializing in a wide range of printing services—including banners, posters, foam boards, stickers, wedding stationery, T-shirts, etc. 
+                Specializing in a wide range of printing services—including banners, posters, foam boards, stickers, wedding stationery, T-shirts, etc.
 
-KUTMASTERZ has carved a niche in the ticketing domain. Our innovative approach to event ticketing has transformed the way tickets are printed and authenticated.  
+                KUTMASTERZ has carved a niche in the ticketing domain. Our innovative approach to event ticketing has transformed the way tickets are printed and authenticated.
               </p>
 
               <p className="mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base text-gray-700 leading-relaxed">
-              Recognizing the need for enhanced security in ticketing, we pioneered ticket numbering for safety, later incorporating holograms and tamper-proof seals. However, with increased security comes increased cost, and nobody likes extra costs. Our commitment to improvement led us to develop UV light tickets, featuring hidden watermarks and holograms that are only visible under UV light. This cutting-edge solution not only enhances security but also reduces costs associated with traditional ticketing methods, as the machine was built over 2 years with continuous in-house R&D using modular printing kits by brands like Mimaki, Epson, and Xerox. Hence, we can proudly say that this UV printing technology was built and not brought. 
+                Recognizing the need for enhanced security in ticketing, we pioneered ticket numbering for safety, later incorporating holograms and tamper-proof seals. However, with increased security comes increased cost, and nobody likes extra costs. Our commitment to improvement led us to develop UV light tickets, featuring hidden watermarks and holograms that are only visible under UV light. This cutting-edge solution not only enhances security but also reduces costs associated with traditional ticketing methods, as the machine was built over 2 years with continuous in-house R&D using modular printing kits by brands like Mimaki, Epson, and Xerox. Hence, we can proudly say that this UV printing technology was built and not brought.
               </p>
 
               {/* <p className="mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base text-gray-700 leading-relaxed">

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
 import { Mail, Instagram } from 'lucide-react';
-import axiosSecure from '../../lib/axiosSecure';
+import { useState } from 'react';
 import { toast } from 'sonner';
+import axiosSecure from '../../lib/axiosSecure';
+
 
 // TikTok Icon Component (custom since it's not in Lucide)
 const TikTokIcon = ({ className }) => (
@@ -19,16 +20,18 @@ const WhatsAppIcon = ({ className }) => (
 
 function Footer() {
   const [showForm, setShowForm] = useState(false);
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState('');
+  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+
 
   const handleRequestDemo = () => {
     setShowForm(true);
     setSubmitted(false);
   };
-
 
   const handleSubmitDemo = async () => {
     if (!email || !phone) {
@@ -42,12 +45,13 @@ function Footer() {
       const result = await axiosSecure.post('api/v1/email/send', { email, phone, requestType: "demo" });
 
       if (!result.data.success) {
-        toast.error(result.data.message ||'Error Sending Email')
+        toast.error(result.data.message || 'Error Sending Email');
       }
-      
+
       setSubmitted(true);
-      // Reset form after showing success message
       setTimeout(() => {
+        setName('');
+        setMessage('');
         setEmail('');
         setPhone('');
         setShowForm(false);
@@ -84,7 +88,7 @@ function Footer() {
             </p>
 
             {/* Social Media Icons */}
-            <div className="flex space-x-4 pt-2">
+            {/* <div className="flex space-x-4 pt-2">
               <a
                 href="https://www.tiktok.com/@kutmasterz"
                 target="_blank"
@@ -117,12 +121,12 @@ function Footer() {
                 href="https://www.instagram.com/kutmasterzlondon/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-pink-500 transition-colors duration-200"
                 aria-label="Follow us on Instagram"
+                className="text-gray-400 hover:text-pink-500 transition-colors duration-200"
               >
                 <Instagram className="w-5 h-5" />
               </a>
-            </div>
+            </div> */}
           </div>
 
           {/* Company Links */}
@@ -135,13 +139,7 @@ function Footer() {
                 About
               </a>
               <a href="#" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
-                Features
-              </a>
-              <a href="#" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
-                Works
-              </a>
-              <a href="#" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
-                Contact
+                Featured Work
               </a>
             </nav>
           </div>
@@ -149,86 +147,128 @@ function Footer() {
           {/* Help Links */}
           <div className="space-y-4">
             <h6 className="font-semibold text-gray-800 uppercase text-sm tracking-wider">
-              HELP
+              Contact
             </h6>
             <nav className="flex flex-col space-y-3">
-              <a href="#" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
-                Customer Support
+              <a
+                href="https://wa.me/+447454008119"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label='Contact us on WhatsApp'
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                <WhatsAppIcon className="w-5 h-5" />
+                Whatsapp
               </a>
-              <a href="#" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
-                Terms & Conditions
+              <a
+                href="mailto:Kutmasterz14@gmail.com"
+                aria-label="Send us an email"
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800 transition-colors">
+                <Mail className="w-5 h-5" />
+                Email
               </a>
-              <a href="#" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
-                Privacy Policy
+              <a
+                href="https://www.instagram.com/kutmasterzlondon/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow us on Instagram"
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800 transition-colors">
+                <Instagram className="w-5 h-5" />
+                Instagram
+              </a>
+              <a href="https://www.tiktok.com/@kutmasterz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                aria-label='Follow us on TikTok'
+              >
+                <p
+                  className="text-gray-400 hover:text-black transition-colors duration-200"
+                >
+                  <TikTokIcon className="w-5 h-5" />
+                </p>
+
+                Tiktok
               </a>
             </nav>
           </div>
 
-          {/* Request Demo Section */}
+          {/* General Query Form*/}
           <div className="space-y-4">
-            <h6 className="font-semibold text-gray-800 uppercase text-sm tracking-wider">
-              GET STARTED
+            <h6
+              onClick={() => setShowForm(!showForm)}
+              className="font-semibold cursor-pointer text-gray-800 uppercase text-sm tracking-wider"
+            >
+              General Query
             </h6>
 
-            {!showForm ? (
-              <div className="space-y-4">
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Ready to see what we can do for you? Request a personalized demo today.
-                </p>
-
-                {/* Request Demo Button */}
-                <button
-                  onClick={handleRequestDemo}
-                  className="w-full bg-gradient-to-r from-cyan-400 to-cyan-300 hover:from-cyan-500 hover:to-cyan-400 text-black font-medium py-3 px-6 rounded-md transition-all duration-200 text-sm shadow-md hover:shadow-lg"
-                >
-                  Request Demo
-                </button>
-              </div>
-            ) : submitted ? (
-              <div className="space-y-4">
-                <div className="bg-green-50 border border-green-200 rounded-md p-4">
+            <div className="space-y-3">
+              {/* Display request demo button when form is hidden */}
+              {!showForm ? (
+                <div className="text-center mt-4">
+                  <button
+                    onClick={handleRequestDemo}
+                    className="w-full max-w-xs bg-gradient-to-r from-cyan-400 to-cyan-300 hover:from-cyan-500 hover:to-cyan-400 text-black font-medium py-2 px-4 rounded-md text-sm shadow-md"
+                  >
+                    Let us know your needs
+                  </button>
+                </div>
+              ) : submitted ? (
+                <div className="bg-green-50 border border-green-200 rounded-md p-2">
                   <div className="flex">
                     <div className="flex-shrink-0">
-                      <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                      <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <div className="ml-3">
-                      <h3 className="text-sm font-medium text-green-800">
-                        Demo Request Submitted!
-                      </h3>
-                      <div className="mt-2 text-sm text-green-700">
-                        <p>Thank you for your interest. We'll contact you within 24 hours.</p>
-                      </div>
+                    <div className="ml-2">
+                      <h3 className="text-sm font-medium text-green-800">Demo Request Submitted!</h3>
+                      <p className="text-sm text-green-700">We'll contact you soon.</p>
                     </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Fill in your details and we'll get back to you soon.
-                </p>
-
+              ) : (
                 <div className="space-y-3">
+                  <p className="text-xs text-gray-600">Fill in your details and we'll get back to you soon.</p>
+
+                  {/* Full Name Input */}
+                  <input
+                    type="text"
+                    placeholder="Full Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    disabled={isSubmitting}
+                    className="w-full p-2 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-transparent placeholder-gray-400 text-gray-700 bg-white disabled:bg-gray-100"
+                  />
+
                   {/* Email Input */}
                   <input
                     type="email"
-                    placeholder="Your email address"
+                    placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={isSubmitting}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent placeholder-gray-400 text-gray-700 bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="w-full p-2 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-transparent placeholder-gray-400 text-gray-700 bg-white disabled:bg-gray-100"
                   />
 
                   {/* Phone Input */}
                   <input
                     type="tel"
-                    placeholder="Your phone number"
+                    placeholder="Phone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     disabled={isSubmitting}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent placeholder-gray-400 text-gray-700 bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="w-full p-2 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-transparent placeholder-gray-400 text-gray-700 bg-white disabled:bg-gray-100"
+                  />
+
+                  {/* Message Input */}
+                  <textarea
+                    type="text"
+                    placeholder="Message"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    disabled={isSubmitting}
+                    className="w-full p-2 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-cyan-400 focus:border-transparent placeholder-gray-400 text-gray-700 bg-white disabled:bg-gray-100"
                   />
 
                   {/* Action Buttons */}
@@ -236,16 +276,13 @@ function Footer() {
                     <button
                       onClick={handleSubmitDemo}
                       disabled={isSubmitting}
-                      className="flex-1 bg-gradient-to-r from-cyan-400 to-cyan-300 hover:from-cyan-500 hover:to-cyan-400 text-black font-medium py-2 px-4 rounded-md transition-all duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                      className="w-full bg-gradient-to-r from-cyan-400 to-cyan-300 text-black font-medium py-2 px-4 rounded-md text-xs shadow-md disabled:opacity-50"
                     >
                       {isSubmitting ? (
-                        <>
-                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-black" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Submitting...
-                        </>
+                        <svg className="animate-spin h-4 w-4 text-black mr-2" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
                       ) : (
                         'Submit'
                       )}
@@ -253,14 +290,14 @@ function Footer() {
                     <button
                       onClick={handleCancel}
                       disabled={isSubmitting}
-                      className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-600 font-medium py-2 px-4 rounded-md transition-all duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full bg-gray-200 hover:bg-gray-300 text-gray-600 font-medium py-2 px-4 rounded-md text-xs disabled:opacity-50"
                     >
                       Cancel
                     </button>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

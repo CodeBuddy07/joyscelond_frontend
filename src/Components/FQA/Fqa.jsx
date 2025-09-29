@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Minus, Plus } from 'lucide-react';
+import RequestDemo from '../RequestDemo/RequestDemo';
 
 function FAQ() {
   const [openIndex, setOpenIndex] = useState(0); // First item open by default
@@ -35,7 +36,7 @@ function FAQ() {
     },
     {
       question: "What happens if a ticket is invalid?",
-      answer: "If a ticket is invalid, the app will alert the user, preventing entry or access associated with the ticket."
+      answer: "if the ticket is invalid , the validator will be notied. preventing entry or access associated with the ticket."
     },
     {
       question: "What support is available if I encounter issues?",
@@ -106,7 +107,7 @@ function FAQ() {
                 )}
               </div>
             </button>
-            
+
             {openIndex === index && (
               <div className="pb-5 pr-12">
                 <p className="text-gray-600 leading-relaxed">
@@ -130,6 +131,7 @@ function FAQ() {
           Get Support
         </button>
       </div> */}
+      <RequestDemo />
     </div>
   );
 }
