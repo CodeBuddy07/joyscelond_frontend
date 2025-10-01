@@ -84,7 +84,7 @@ function Footer() {
               className="h-12"
             />
             <p className="text-sm text-gray-600 leading-relaxed">
-              Clarity gives you the blocks and components <br /> you  need to create a truly professional website.
+              Clarity gives you the blocks and components.<br />
             </p>
 
             {/* Social Media Icons */}
