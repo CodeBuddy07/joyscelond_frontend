@@ -59,16 +59,16 @@ function FAQ() {
       answer: "No, you don't need an external scanner, but you can use your phone camera to scan the tickets."
     },
     {
-      question: "Is there a free trial available?",
-      answer: "You don't need to register for a free trial, but we can offer you a free demo to explore the features and benefits. Simply click on the get free demo link."
-    },
-    {
       question: "What is the cancellation policy?",
       answer: "We have a free cancellation policy that allows you to cancel without any charges before your order is confirmed. Any tickets once printed won't be given a refund."
     },
     {
       question: "Can I add more tickets to the already existing batch of tickets?",
       answer: "Yes, you can add more tickets to your existing batch. We'll ensure they are added to the last batch in sequence, maintaining continuity."
+    },
+    {
+      question: "Is there a free trial available?",
+      answer: "You don't need to register for a free trial, but we can offer you a free demo to explore the features and benefits. Simply click on the get free demo link."
     }
   ];
 

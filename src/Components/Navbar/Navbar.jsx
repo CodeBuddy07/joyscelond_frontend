@@ -248,9 +248,10 @@ const Navbar = () => {
         <HeroSection />
         <Dashboard />
         <Do />
-        <FAQ />
+
         <TestimonialSection />
-        <ContactForm />
+        <FAQ />
+        {/* <ContactForm /> */}
         <Footer />
       </div>
 

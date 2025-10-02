@@ -63,28 +63,28 @@ function Do() {
       <div className="mt-4 sm:mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         <div className="text-center p-4 sm:p-6 md:p-8 bg-gray-50 rounded-lg flex flex-col items-center justify-center">
           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-violet-600 mb-1 sm:mb-2">
-            <CountUp end={150} duration={2} suffix="+" />
+            <CountUp end={5} duration={2} suffix="K+" />
           </div>
           <div className="text-sm sm:text-base text-gray-600">Happy Clients</div>
         </div>
 
         <div className="text-center p-4 sm:p-6 md:p-8 bg-gray-50 rounded-lg flex flex-col items-center justify-center">
           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 mb-1 sm:mb-2">
-            <CountUp end={30} duration={2} />
+            <CountUp end={7} duration={2} />
           </div>
           <div className="text-sm sm:text-base text-gray-600">Team Members</div>
         </div>
 
         <div className="text-center p-4 sm:p-6 md:p-8 bg-gray-50 rounded-lg flex flex-col items-center justify-center sm:col-span-2 md:col-span-1">
           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 mb-1 sm:mb-2">
-            <CountUp end={5} duration={2} />
+            <CountUp end={11} duration={2} suffix='K+' />
           </div>
           <div className="text-sm sm:text-base text-gray-600">Years Strong</div>
         </div>
 
         <div className="text-center p-4 sm:p-6 md:p-8 bg-gray-50 rounded-lg flex flex-col items-center justify-center sm:col-span-2 md:col-span-1">
           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-cyan-400 mb-1 sm:mb-2">
-            <CountUp end={98000} duration={2} />
+            <CountUp end={98} duration={2} suffix='K+' />
           </div>
           <div className="text-sm sm:text-base text-gray-600">Tickets Printed</div>
         </div>
