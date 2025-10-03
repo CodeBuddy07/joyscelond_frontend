@@ -5,6 +5,7 @@ import QrReader from './QrReader';
 import axiosSecure from '../../lib/axiosSecure';
 import { toast } from 'sonner';
 import { ProtectedRoute } from '../../lib/ProtectedRoute';
+import logo from '../../assets/logo.svg';
 
 const HeroSection = () => {
   const [isScanning, setIsScanning] = useState(false);
@@ -182,8 +183,10 @@ const HeroSection = () => {
               Perfect for events, ticket validation, entry-exit management, and inventory control.
             </p> */}
 
-            <h1 className='text-5xl font-bold'>Validator</h1>
-            <h2 className='text-5xl font-bold bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] bg-clip-text text-transparent'>Scan to validate</h2>
+            {/* <h1 className='text-5xl font-bold'>Validator</h1>
+            <h2 className='text-5xl font-bold bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] bg-clip-text text-transparent'>Scan to validate</h2> */}
+            <img src={logo} alt='Logo' />
+
             <p className="mt-6 mb-8 text-lg sm:mb-12 text-nowrap">
               Safer, Faster, Smarter way to validate your event attendees.
             </p>
@@ -194,8 +197,8 @@ const HeroSection = () => {
                   onClick={handleStartScanning}
                   disabled={isScanning}
                   className={`flex items-center gap-2 px-8 py-3 text-lg text-center font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 ${isScanning
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] hover:shadow-lg text-white'
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] hover:shadow-lg text-white'
                     }`}
                 >
                   {isScanning ? 'SCANNING...' : 'START QR SCANNER'} <RiQrScan2Line />
@@ -260,8 +263,8 @@ const HeroSection = () => {
               <button
                 onClick={() => switchMethod('scan')}
                 className={`flex-1 py-2 rounded-lg font-medium transition-colors ${method === 'scan'
-                    ? 'bg-green-500 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'bg-green-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
               >
                 Scan Mode
@@ -269,8 +272,8 @@ const HeroSection = () => {
               <button
                 onClick={() => switchMethod('deScan')}
                 className={`flex-1 py-2 rounded-lg font-medium transition-colors ${method === 'deScan'
-                    ? 'bg-red-500 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  ? 'bg-red-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
               >
                 De-Scan Mode
