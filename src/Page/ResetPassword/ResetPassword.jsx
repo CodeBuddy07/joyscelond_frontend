@@ -1,14 +1,43 @@
 import { Eye, EyeOff, Lock } from 'lucide-react';
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner';
+import axiosSecure from '../../lib/axiosSecure';
 
 const ResetPassword = () => {
     const [showPassword, setShowPassword] = useState();
     const [resetPassword, setResetPassword] = useState();
     const [resetConfirmPassword, setResetConfirmPassword] = useState();
 
-    const handleResetPassword = () => {
-        toast.success('Reset Password button clicked.')
+    const token = window.location.pathname.split('/').pop();
+    console.log(token);
+
+    const handleResetPassword = async () => {
+        if (!resetPassword || !resetConfirmPassword) {
+            toast.error('Please fill in all fields');
+            return;
+        }
+
+        if (resetPassword !== resetConfirmPassword) {
+            toast.error('Passwords do not match');
+            return;
+        }
+
+        try {
+            const response = await axiosSecure.post(`/api/v1/auth/reset-password/${token}`, {
+                password: resetPassword,
+            });
+            if (response.data.success) {
+                toast.success('Password reset successful. You can now log in with your new password.');
+                // Redirect to login page or another page
+                window.location.href = '/';
+            }
+
+        } catch (error) {
+
+            console.error('Reset password error:', error);
+            const errorMessage = error.response?.data?.message || 'Password reset failed';
+            toast.error(errorMessage);
+        }
     }
 
     return (
@@ -72,4 +101,4 @@ const ResetPassword = () => {
     )
 }
 
-export default ResetPassword
+export default ResetPassword;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, LogIn, User, Lock, Sparkles } from 'lucide-react';
 import axiosSecure from '../../lib/axiosSecure';
 
-export default function Login() {
+export default function Login({closeLogin}) {
   const [eventID, setEventID] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -78,6 +78,8 @@ export default function Login() {
       setIsLoading(false);
     }
   };
+
+  
 
   return (
     <div className="w-full max-w-md mx-auto p-6">
@@ -156,6 +158,7 @@ export default function Login() {
                 <Eye className="h-5 w-5" />
               )}
             </button>
+            
           </div>
         </div>
 
@@ -197,7 +200,7 @@ export default function Login() {
       <div className="text-center">
         <p className="text-sm text-gray-600">
           Don't have an account?{' '}
-          <a href="#" className="font-medium text-blue-600 hover:text-blue-800 transition-colors duration-200">
+          <a onClick={closeLogin} href="#help" className="font-medium text-blue-600 hover:text-blue-800 transition-colors duration-200">
             Contact administrator
           </a>
         </p>

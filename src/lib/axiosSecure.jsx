@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 export const axiosSecure = axios.create({
-  baseURL: 'https://api.kutmasterz.com',
-  //baseURL: 'http://localhost:5000',
+  //baseURL: 'https://api.kutmasterz.com',
+  baseURL: 'http://localhost:5000',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

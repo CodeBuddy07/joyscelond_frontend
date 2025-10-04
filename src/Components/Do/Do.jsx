@@ -57,7 +57,7 @@ function Do() {
   }, [showCountdown]);
 
   return (
-    <section className="my-4 sm:my-6 md:my-8 lg:-mt-0 dark:bg-gray-100 dark:text-gray-800 px-2 sm:px-4">
+    <section id='bio' className="my-4 sm:my-6 md:my-8 lg:-mt-0 dark:bg-gray-100 dark:text-gray-800 px-2 sm:px-4">
 
       {/* Stats */}
       <div className="mt-4 sm:mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
@@ -118,7 +118,7 @@ function Do() {
         </div>
 
         {isExpanded && (
-          <div className="w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto mt-4 sm:mt-6 md:mt-8 p-3 sm:p-4 md:p-6 bg-white rounded-lg shadow-lg animate-in slide-in-from-top duration-300">
+          <div  className="w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto mt-4 sm:mt-6 md:mt-8 p-3 sm:p-4 md:p-6 bg-white rounded-lg shadow-lg animate-in slide-in-from-top duration-300">
             <div className="prose prose-gray max-w-none">
               <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 md:mb-4 text-gray-800">The KUTMASTERZ Journey</h3>
 

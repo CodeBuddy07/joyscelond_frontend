@@ -135,7 +135,7 @@ function Footer() {
               COMPANY
             </h6>
             <nav className="flex flex-col space-y-3">
-              <a href="#" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
+              <a href="#bio" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
                 About
               </a>
               <a href="#" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
@@ -149,7 +149,7 @@ function Footer() {
             <h6 className="font-semibold text-gray-800 uppercase text-sm tracking-wider">
               Contact
             </h6>
-            <nav className="flex flex-col space-y-3">
+            <nav id='help' className="flex flex-col space-y-3">
               <a
                 href="https://wa.me/+447454008119"
                 target="_blank"
