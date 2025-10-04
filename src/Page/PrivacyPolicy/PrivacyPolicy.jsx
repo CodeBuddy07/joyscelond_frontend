@@ -6,7 +6,7 @@ const PrivacyPolicy = () => {
         <div className="min-h-screen bg-gray-50 py-8 px-4">
             <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-6 md:p-10">
 
-                <button className="flex items-center justify-center mb-4 gap-2 mb-6 text-gray-600 hover:text-gray-800 transition-colors" >
+                <button className="flex items-center justify-center gap-2 mb-6 text-gray-600 hover:text-gray-800 transition-colors" >
                     <ArrowLeft className="w-6 h-6 text-gray-600  hover:text-gray-800 cursor-pointer" onClick={() => window.location = '/'} />
                    Back to Home
                 </button>
