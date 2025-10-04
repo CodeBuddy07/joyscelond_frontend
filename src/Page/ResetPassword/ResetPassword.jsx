@@ -9,8 +9,7 @@ const ResetPassword = () => {
     const [resetConfirmPassword, setResetConfirmPassword] = useState();
 
     const token = window.location.pathname.split('/').pop();
-    console.log(token);
-
+    
     const handleResetPassword = async () => {
         if (!resetPassword || !resetConfirmPassword) {
             toast.error('Please fill in all fields');
