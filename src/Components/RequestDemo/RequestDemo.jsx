@@ -54,7 +54,7 @@ const RequestDemo = () => {
 
 
     return (
-        < div className="space-y-4" >
+        < div id="contact" className="space-y-4" >
             {/* <h6 className="font-semibold text-gray-800 uppercase text-sm tracking-wider">
                 GET STARTED
             </h6> */}
