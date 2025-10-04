@@ -187,7 +187,7 @@ const HeroSection = () => {
             <h2 className='text-5xl font-bold bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] bg-clip-text text-transparent'>Scan to validate</h2> */}
             <img src={logo} alt='Logo' />
 
-            <p className="mt-6 mb-8 text-lg sm:mb-12 text-nowrap">
+            <p className="mt-6 mb-8 text-lg sm:mb-12 lg:text-nowrap">
               Safer, Faster, Smarter way to validate your event attendees.
             </p>
 

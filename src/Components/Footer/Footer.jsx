@@ -141,6 +141,9 @@ function Footer() {
               <a href="#" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
                 Featured Work
               </a>
+              {/* <a href="/privacy-policy" className="text-sm text-gray-600 hover:text-gray-800 transition-colors">
+                Privacy policy
+              </a> */}
             </nav>
           </div>
 

@@ -77,7 +77,7 @@ function Do() {
 
         <div className="text-center p-4 sm:p-6 md:p-8 bg-gray-50 rounded-lg flex flex-col items-center justify-center sm:col-span-2 md:col-span-1">
           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 mb-1 sm:mb-2">
-            <CountUp end={11} duration={2} suffix='K+' />
+            <CountUp end={11} duration={2} suffix='' />
           </div>
           <div className="text-sm sm:text-base text-gray-600">Years Strong</div>
         </div>
