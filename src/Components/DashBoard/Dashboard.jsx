@@ -289,7 +289,7 @@ const Dashboard = () => {
       fetchAttendees();
       if (response.data.data?.scanCount > 1) {
         setLoading(false);
-        toast.warning('Duplicate Scan Detected!', {
+        toast.success('Ticket validation successful!', {
           description: `This QR code has been scanned ${response.data.data.scanCount} times`,
           duration: 4000,
         });
@@ -321,8 +321,8 @@ const Dashboard = () => {
       fetchAttendees();
       if (response.data.data?.scanCount > 1) {
         setLoading(false);
-        toast.warning('Duplicate De-Scan Detected!', {
-          description: `This QR code has been scanned ${response.data.data.scanCount} times`,
+        toast.success(response.data.message || 'Ticket De-Scan successful!', {
+          description: `This QR code has been de-scanned ${response.data.data.scanCount} times`,
           duration: 4000,
         });
       } else if (response.data.data?.scanCount === 1 && response.data.success) {

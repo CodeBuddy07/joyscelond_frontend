@@ -36,7 +36,7 @@ const HeroSection = () => {
       toast.dismiss(loadingToast);
 
       if (response.data.data?.scanCount > 1) {
-        toast.warning('Duplicate Scan Detected!', {
+        toast.success(response.data.message || 'Ticket scan successful!', {
           description: `This QR code has been scanned ${response.data.data.scanCount} times`,
           duration: 4000,
         });
