@@ -67,12 +67,19 @@ const RequestDemo = () => {
                         </p> */}
 
                         {/* Request Demo Button */}
-                        <div className="flex items-center justify-center mt-8">
+                        <div className="flex items-center gap-5 justify-center mt-8">
                             <button
                                 onClick={handleRequestDemo}
                                 className="w-[200px] bg-gradient-to-r from-cyan-400 to-cyan-300 hover:from-cyan-500 hover:to-cyan-400 text-black font-medium py-3 px-6 rounded-md transition-all duration-200 text-sm shadow-md hover:shadow-lg"
                             >
                                 Request Demo
+                            </button>
+
+                             <button
+                                onClick={()=> window.location = 'https://www.kutmasterz.co.uk/'}
+                                className="w-[200px] bg-gradient-to-r from-cyan-400 to-cyan-300 hover:from-cyan-500 hover:to-cyan-400 text-black font-medium py-3 px-6 rounded-md transition-all duration-200 text-sm shadow-md hover:shadow-lg"
+                            >
+                                Buy tickets
                             </button>
                         </div>
                     </div>

@@ -77,16 +77,12 @@ function Footer() {
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 lg:gap-20">
           {/* Logo and Description */}
-          <div className="space-y-4">
+          <div className="space-y-4 flex lg:justify-start justify-center">
             <img
               src="/logo.svg"
               alt="KutMasterz Logo"
-              className="h-12"
+              className="h-12 "
             />
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Clarity gives you the blocks and components.<br />
-            </p>
-
             {/* Social Media Icons */}
             {/* <div className="flex space-x-4 pt-2">
               <a

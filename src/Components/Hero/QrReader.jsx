@@ -170,7 +170,7 @@ const QrReader = ({ onScan, onError, onClose, method = 'scan' }) => {
         className="w-full h-full object-cover"
         playsInline
         muted
-        style={{ transform: 'scaleX(-1)' }}
+        
       />
 
       <div className="absolute inset-0 pointer-events-none">
