@@ -86,7 +86,7 @@ const HeroSection = () => {
       toast.dismiss(loadingToast);
 
       if (response.data.data?.deScanCount > 1) {
-        toast.warning('Duplicate De-Scan Detected!', {
+        toast.success(response.data.message || 'Ticket de-scan successful!', {
           description: `This QR code has been de-scanned ${response.data.data.deScanCount} times`,
           duration: 4000,
         });
