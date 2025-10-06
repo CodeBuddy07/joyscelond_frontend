@@ -8,37 +8,28 @@ const QrReader = ({ onScan, onError, onClose, method = 'scan' }) => {
   const [cameraError, setCameraError] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Separate arrays for scanned and de-scanned QR codes
-  const scannedCodesRef = useRef('');
-  const deScannedCodesRef = useRef('');
+  // Store the currently scanned QR code (only one at a time)
+  const currentQrCodeRef = useRef(null);
+  const hasApiBeenCalledRef = useRef(false);
 
-  const addToScannedCodes = useCallback((qrData) => {
-    scannedCodesRef.current = qrData;
-  }, [])
-
-  const addToDeScannedCodes = useCallback((qrData) => {
-    deScannedCodesRef.current = qrData;
+  // Create beep sound function
+  const playBeep = useCallback(() => {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 800; // Frequency in Hz
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.2);
   }, []);
-
-  const isCodeAlreadyProcessed = useCallback((qrData) => {
-  if (method === 'scan') {
-    if(scannedCodesRef.current === qrData && deScannedCodesRef.current === qrData){
-      deScannedCodesRef.current = '';
-      return true;
-    }else if(scannedCodesRef.current === qrData){
-      return true;
-    }
-    return false;
-  } else {
-    if(deScannedCodesRef.current === qrData && scannedCodesRef.current === qrData){
-      scannedCodesRef.current = '';
-      return true;
-    }else if(deScannedCodesRef.current === qrData){
-      return true;
-    } 
-    return false;
-  }
-}, [method]);
 
   const startScanning = useCallback(async () => {
     try {
@@ -73,25 +64,30 @@ const QrReader = ({ onScan, onError, onClose, method = 'scan' }) => {
           if (result && !isProcessing) {
             const qrData = result.getText();
 
-            // Check if this QR code was already processed in the current mode
-            if (!isCodeAlreadyProcessed(qrData)) {
-              setIsProcessing(true);
+            // CHANGED: Check if this is a new QR code
+            if (currentQrCodeRef.current !== qrData) {
+              // CHANGED: New QR code detected - replace the previous one
+              currentQrCodeRef.current = qrData;
+              hasApiBeenCalledRef.current = false;
+              
+              // CHANGED: If API hasn't been called for this QR code, call it
+              if (!hasApiBeenCalledRef.current) {
+                setIsProcessing(true);
+                hasApiBeenCalledRef.current = true;
 
-              // Add to the appropriate array based on mode
-              if (method === 'scan') {
-                addToScannedCodes(qrData);
-              } else {
-                addToDeScannedCodes(qrData);
+                // CHANGED: Play beep sound
+                playBeep();
+
+                // Call the onScan callback
+                onScan(qrData);
+
+                // Reset processing state after 2 seconds
+                setTimeout(() => {
+                  setIsProcessing(false);
+                }, 2000);
               }
-
-              // Call the onScan callback
-              onScan(qrData);
-
-              // Reset processing state after 2 seconds
-              setTimeout(() => {
-                setIsProcessing(false);
-              }, 2000);
             }
+            // If same QR code is still in view, do nothing (don't hit API again)
           }
 
           if (err && !(err.name === 'NotFoundException')) {
@@ -106,18 +102,24 @@ const QrReader = ({ onScan, onError, onClose, method = 'scan' }) => {
       setIsScanning(false);
       if (onError) onError(error);
     }
-  }, [onScan, onError, isProcessing, isCodeAlreadyProcessed, addToScannedCodes, addToDeScannedCodes, method]);
+  }, [onScan, onError, isProcessing, playBeep]);
 
   const stopScanning = useCallback(() => {
     if (codeReaderRef.current) {
       codeReaderRef.current.reset();
       codeReaderRef.current = null;
     }
+    // CHANGED: Clear the current QR code when stopping
+    currentQrCodeRef.current = null;
+    hasApiBeenCalledRef.current = false;
     setIsScanning(false);
     setIsProcessing(false);
   }, []);
 
+  // CHANGED: When method changes, reset everything and restart scanning
   useEffect(() => {
+    currentQrCodeRef.current = null;
+    hasApiBeenCalledRef.current = false;
     startScanning();
 
     return () => {
@@ -170,7 +172,6 @@ const QrReader = ({ onScan, onError, onClose, method = 'scan' }) => {
         className="w-full h-full object-cover"
         playsInline
         muted
-        
       />
 
       <div className="absolute inset-0 pointer-events-none">

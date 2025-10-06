@@ -12,17 +12,17 @@ const HeroSection = () => {
   const [method, setMethod] = useState('scan');
   const [isProcessingAPI, setIsProcessingAPI] = useState(false);
 
-  // Separate refs to track API calls for scan and de-scan
-  const scanApiCallsInProgress = useRef(new Set());
-  const deScanApiCallsInProgress = useRef(new Set());
+  // CHANGED: Single ref to track current API call
+  const apiCallInProgress = useRef(false);
 
   const handleScan = useCallback(async (qrData) => {
-    if (scanApiCallsInProgress.current.has(qrData)) {
+    // CHANGED: Prevent concurrent API calls
+    if (apiCallInProgress.current) {
       return;
     }
 
     try {
-      scanApiCallsInProgress.current.add(qrData);
+      apiCallInProgress.current = true;
       setIsProcessingAPI(true);
 
       const loadingToast = toast.loading('Processing QR code...', {
@@ -35,15 +35,12 @@ const HeroSection = () => {
 
       toast.dismiss(loadingToast);
 
-      if (response.data.data?.scanCount > 1) {
+      if (response.data.success) {
         toast.success(response.data.message || 'Ticket scan successful!', {
-          description: `This QR code has been scanned ${response.data.data.scanCount} times`,
+          description: response.data.data?.scanCount > 1 
+            ? `This QR code has been scanned ${response.data.data.scanCount} times`
+            : 'QR code processed successfully',
           duration: 4000,
-        });
-      } else if (response.data.data?.scanCount === 1 && response.data.success) {
-        toast.success(response.data.message || 'Ticket scan successful!', {
-          description: 'QR code processed successfully',
-          duration: 3000,
         });
       } else {
         toast.error(response.data.message || 'Ticket scan unsuccessful!', {
@@ -61,18 +58,19 @@ const HeroSection = () => {
 
       console.error('API Error:', error);
     } finally {
-      scanApiCallsInProgress.current.delete(qrData);
+      apiCallInProgress.current = false;
       setIsProcessingAPI(false);
     }
   }, []);
 
   const handleDeScan = useCallback(async (qrData) => {
-    if (deScanApiCallsInProgress.current.has(qrData)) {
+    // CHANGED: Prevent concurrent API calls
+    if (apiCallInProgress.current) {
       return;
     }
 
     try {
-      deScanApiCallsInProgress.current.add(qrData);
+      apiCallInProgress.current = true;
       setIsProcessingAPI(true);
 
       const loadingToast = toast.loading('Processing QR code...', {
@@ -85,15 +83,12 @@ const HeroSection = () => {
 
       toast.dismiss(loadingToast);
 
-      if (response.data.data?.deScanCount > 1) {
+      if (response.data.success) {
         toast.success(response.data.message || 'Ticket de-scan successful!', {
-          description: `This QR code has been de-scanned ${response.data.data.deScanCount} times`,
+          description: response.data.data?.deScanCount > 1
+            ? `This QR code has been de-scanned ${response.data.data.deScanCount} times`
+            : 'QR code processed successfully',
           duration: 4000,
-        });
-      } else if (response.data.data?.deScanCount === 1 && response.data.success) {
-        toast.success(response.data.message || 'Ticket de-scan successful!', {
-          description: 'QR code processed successfully',
-          duration: 3000,
         });
       } else {
         toast.error(response.data.message || 'Ticket de-scan unsuccessful!', {
@@ -111,7 +106,7 @@ const HeroSection = () => {
 
       console.error('API Error:', error);
     } finally {
-      deScanApiCallsInProgress.current.delete(qrData);
+      apiCallInProgress.current = false;
       setIsProcessingAPI(false);
     }
   }, []);
@@ -136,8 +131,8 @@ const HeroSection = () => {
   const handleStartScanning = useCallback(() => {
     setMethod('scan');
     setIsScanning(true);
-    scanApiCallsInProgress.current.clear();
-    deScanApiCallsInProgress.current.clear();
+    // CHANGED: Clear API call flag
+    apiCallInProgress.current = false;
     setIsProcessingAPI(false);
 
     toast.info('QR Scanner Started', {
@@ -149,8 +144,8 @@ const HeroSection = () => {
   const handleStopScanning = useCallback(() => {
     setIsScanning(false);
     setIsProcessingAPI(false);
-    scanApiCallsInProgress.current.clear();
-    deScanApiCallsInProgress.current.clear();
+    // CHANGED: Clear API call flag
+    apiCallInProgress.current = false;
 
     toast.success('Scanning Session Completed', {
       duration: 2000,
@@ -171,20 +166,6 @@ const HeroSection = () => {
       <section className="dark:bg-gray-100 dark:text-gray-800">
         <div className="mt-10 md:mt-16 lg:mt-0 w-full flex flex-col justify-center sm:py-12 lg:py-32 lg:flex-row lg:justify-between xl:gap-72">
           <div className="flex flex-col justify-center lg:p-0 md:p-0 p-6 lg:ps-32 text-center rounded-sm lg:max-w-md xl:max-w-lg lg:text-left">
-            {/* <h1 className="text-5xl font-bold leading-none sm:text-6xl">
-              Scan & De-Scan
-              <br />
-              <span className="bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] bg-clip-text text-transparent">
-                QR Codes
-              </span>
-            </h1>
-            <p className="mt-6 mb-8 text-lg sm:mb-12">
-              Continuously scan and de-scan multiple QR codes without interruption.
-              Perfect for events, ticket validation, entry-exit management, and inventory control.
-            </p> */}
-
-            {/* <h1 className='text-5xl font-bold'>Validator</h1>
-            <h2 className='text-5xl font-bold bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] bg-clip-text text-transparent'>Scan to validate</h2> */}
             <img src={logo} alt='Logo' />
 
             <p className="mt-6 mb-8 text-lg sm:mb-12 lg:text-nowrap">
@@ -284,8 +265,8 @@ const HeroSection = () => {
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-600">
                 {method === 'scan'
-                  ? 'Scan mode: Prevents duplicate scans. You can de-scan the same QR code.'
-                  : 'De-scan mode: Prevents duplicate de-scans. You can scan the same QR code.'
+                  ? 'Scan mode: Entry validation. Must de-scan to exit and re-scan to re-enter.'
+                  : 'De-scan mode: Exit validation. Must scan first before de-scanning.'
                 }
               </p>
             </div>
