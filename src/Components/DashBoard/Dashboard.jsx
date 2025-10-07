@@ -430,7 +430,7 @@ const Dashboard = () => {
             >
               <div className="text-center">
                 <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-red-600`}>
-                  {(attendees.length * totalPages) - attendees.filter(ticket => getStatus(ticket)=='Absent').length}
+                  {(attendees.length * totalPages) - attendees.filter(ticket => getStatus(ticket)=='Present').length}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
                   Absent
