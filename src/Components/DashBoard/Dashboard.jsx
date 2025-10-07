@@ -30,14 +30,36 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
 
 
   const getStatus = (attendee) => {
+    // Check if the attendee is blocked
     if (attendee.isBlocked) return 'Blocked';
-    if (attendee.isUsed) return 'Present';
+
+    // Get the latest scan and de-scan timestamps (if available)
+    const lastScanTime = attendee.scanLogs && attendee.scanLogs.length > 0
+      ? new Date(attendee.scanLogs[attendee.scanLogs.length - 1])
+      : null;
+
+    const lastDeScanTime = attendee.deScanLogs && attendee.deScanLogs.length > 0
+      ? new Date(attendee.deScanLogs[attendee.deScanLogs.length - 1])
+      : null;
+
+    // If there is a scan log and the de-scan log is either non-existent or older, consider the attendee "Present"
+    if (lastScanTime && (!lastDeScanTime || lastScanTime > lastDeScanTime)) {
+      return 'Present';
+    }
+
+    // If there is a de-scan log and it's more recent than the scan log, consider the attendee "Absent"
+    if (lastDeScanTime && (!lastScanTime || lastDeScanTime > lastScanTime)) {
+      return 'Absent';
+    }
+
+    // If no scan or de-scan logs exist, assume "Absent"
     return 'Absent';
   };
 
+
   const getStatusColor = (attendee) => {
-    if (attendee.isBlocked) return 'text-red-600';
-    if (attendee.isUsed) return 'text-green-600';
+    if (getStatus(attendee) == 'Absent') return 'text-red-600';
+    if (getStatus(attendee) == 'Present') return 'text-green-600';
     return 'text-yellow-600';
   };
 
@@ -235,6 +257,33 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const ticketsPerPage = 10;
 
+  const getStatus = (attendee) => {
+    // Check if the attendee is blocked
+    if (attendee.isBlocked) return 'Blocked';
+
+    // Get the latest scan and de-scan timestamps (if available)
+    const lastScanTime = attendee.scanLogs && attendee.scanLogs.length > 0
+      ? new Date(attendee.scanLogs[attendee.scanLogs.length - 1])
+      : null;
+
+    const lastDeScanTime = attendee.deScanLogs && attendee.deScanLogs.length > 0
+      ? new Date(attendee.deScanLogs[attendee.deScanLogs.length - 1])
+      : null;
+
+    // If there is a scan log and the de-scan log is either non-existent or older, consider the attendee "Present"
+    if (lastScanTime && (!lastDeScanTime || lastScanTime > lastDeScanTime)) {
+      return 'Present';
+    }
+
+    // If there is a de-scan log and it's more recent than the scan log, consider the attendee "Absent"
+    if (lastDeScanTime && (!lastScanTime || lastDeScanTime > lastScanTime)) {
+      return 'Absent';
+    }
+
+    // If no scan or de-scan logs exist, assume "Absent"
+    return 'Absent';
+  };
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -381,7 +430,7 @@ const Dashboard = () => {
             >
               <div className="text-center">
                 <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-red-600`}>
-                  {(attendees.length * totalPages) - attendees.filter(ticket => ticket.isUsed).length}
+                  {(attendees.length * totalPages) - attendees.filter(ticket => getStatus(ticket)=='Absent').length}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
                   Absent
@@ -394,7 +443,7 @@ const Dashboard = () => {
             >
               <div className="text-center">
                 <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-green-600`}>
-                  {attendees.filter(ticket => ticket.isUsed).length}
+                  {attendees.filter(ticket => getStatus(ticket)=='Present').length}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
                   Present
@@ -463,8 +512,8 @@ const Dashboard = () => {
                             <button
                               onClick={() => handleBlockToggle(attendee._id, !attendee.isBlocked)}
                               className={`inline-flex items-center justify-center px-4 py-2 border text-sm font-medium rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 min-w-[110px] ${attendee.isBlocked
-                                  ? 'bg-red-100 text-red-800 border-red-300 hover:bg-red-200 focus:ring-red-500'
-                                  : 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200 focus:ring-green-500'
+                                ? 'bg-red-100 text-red-800 border-red-300 hover:bg-red-200 focus:ring-red-500'
+                                : 'bg-green-100 text-green-800 border-green-300 hover:bg-green-200 focus:ring-green-500'
                                 }`}
                             >
                               {attendee.isBlocked ? 'Activate' : 'Block'}
