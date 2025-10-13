@@ -3,7 +3,7 @@ import { Minus, Plus } from 'lucide-react';
 import RequestDemo from '../RequestDemo/RequestDemo';
 
 function FAQ() {
-  const [openIndex, setOpenIndex] = useState(0); // First item open by default
+  const [openIndex, setOpenIndex] = useState(0);
 
   const faqData = [
     {

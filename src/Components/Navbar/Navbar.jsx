@@ -8,6 +8,7 @@ import Footer from '../Footer/Footer';
 // import ContactForm from '../../Components/ContactFrom/contactFrom'
 import Login from '../Auth/Login';
 import { isAuthenticated, logout } from '../../lib/auth';
+import PreviousWork from '../PreviousWork/PreviousWork';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -251,6 +252,12 @@ const Navbar = () => {
 
         <TestimonialSection />
         <FAQ />
+
+        {/* Previous work section starts here */}
+
+        <PreviousWork />
+        {/* Previous work section ends here */}
+
         {/* <ContactForm /> */}
         <Footer />
       </div>
