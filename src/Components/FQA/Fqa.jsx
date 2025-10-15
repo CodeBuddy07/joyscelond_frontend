@@ -36,7 +36,7 @@ function FAQ() {
     },
     {
       question: "What happens if a ticket is invalid?",
-      answer: "if the ticket is invalid , the validator will be notied. preventing entry or access associated with the ticket."
+      answer: "if the ticket is invalid , the validator will be notified. preventing entry or access associated with the ticket."
     },
     {
       question: "What support is available if I encounter issues?",
