@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import imageOne from '../../../public/13RA TICKET-01.jpg';
 import imageTwo from '../../../public/2025 easter ticket-01.jpg';
 import imageThree from '../../../public/annual dance freddy tickets-01.jpg';
@@ -32,283 +32,152 @@ import imageThirtyOne from '../../../public/wall seck green-blue-01.jpg';
 import imageThirtyTwo from '../../../public/WALLY SECK 20205-01.jpg';
 
 const PreviousWork = () => {
-    const sliderRef = useRef(null);
+    const swiperRef = useRef(null);
+    const prevButtonRef = useRef(null);
+    const nextButtonRef = useRef(null);
 
     const projects = [
-        {
-            id: 1,
-            title: "Tech Summit 2023",
-            description: "Validated over 5,000 attendees at the largest tech conference of the year with seamless entry process.",
-            image: imageOne
-        },
-        {
-            id: 2,
-            title: "Summer Music Fest",
-            description: "Managed entry for 15,000+ festival-goers across three days with zero security incidents.",
-            image: imageTwo
-        },
-        {
-            id: 3,
-            title: "Business Leaders Forum",
-            description: "Provided VIP access control and validation for exclusive executive networking event.",
-            image: imageThree
-        },
-        {
-            id: 4,
-            title: "City Marathon 2023",
-            description: "Validated participants and staff across multiple checkpoints for the annual city marathon.",
-            image: imageFour
-        },
-        {
-            id: 5,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageFive
-        },
-        {
-            id: 6,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageSix
-        },
-        {
-            id: 7,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageSeven
-        },
-        {
-            id: 8,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageEight
-        },
-        {
-            id: 9,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageNine
-        },
-        {
-            id: 10,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageTen
-        },
-        {
-            id: 11,
-            title: "Tech Summit 2023",
-            description: "Validated over 5,000 attendees at the largest tech conference of the year with seamless entry process.",
-            image: imageElaven
-        },
-        {
-            id: 12,
-            title: "Summer Music Fest",
-            description: "Managed entry for 15,000+ festival-goers across three days with zero security incidents.",
-            image: imageTwelve
-        },
-        {
-            id: 13,
-            title: "Business Leaders Forum",
-            description: "Provided VIP access control and validation for exclusive executive networking event.",
-            image: imageThirteen
-        },
-        {
-            id: 14,
-            title: "City Marathon 2023",
-            description: "Validated participants and staff across multiple checkpoints for the annual city marathon.",
-            image: imageFifteen
-        },
-        {
-            id: 15,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageSixteen
-        },
-        {
-            id: 16,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageSeventeen
-        },
-        {
-            id: 17,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageEighteen
-        },
-        {
-            id: 18,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageNinteen
-        },
-        {
-            id: 19,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageTwenty
-        },
-        {
-            id: 20,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageTwentyOne
-        },
-        {
-            id: 21,
-            title: "Tech Summit 2023",
-            description: "Validated over 5,000 attendees at the largest tech conference of the year with seamless entry process.",
-            image: imageTwentyTwo
-        },
-        {
-            id: 22,
-            title: "Summer Music Fest",
-            description: "Managed entry for 15,000+ festival-goers across three days with zero security incidents.",
-            image: imageTwentyThree
-        },
-        {
-            id: 23,
-            title: "Business Leaders Forum",
-            description: "Provided VIP access control and validation for exclusive executive networking event.",
-            image: imageTwentyFour
-        },
-        {
-            id: 24,
-            title: "City Marathon 2023",
-            description: "Validated participants and staff across multiple checkpoints for the annual city marathon.",
-            image: imageTwentyFive
-        },
-        {
-            id: 25,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageTwentySix
-        },
-        {
-            id: 26,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageTwentySeven
-        },
-        {
-            id: 27,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageTwentyEight
-        },
-        {
-            id: 28,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageTwentyNine
-        },
-        {
-            id: 29,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageThirty
-        },
-        {
-            id: 30,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageThirtyOne
-        },
-        {
-            id: 31,
-            title: "University Career Fair",
-            description: "Streamlined student and recruiter validation for the largest campus career event.",
-            image: imageThirtyTwo
-        }
+        { id: 1, image: imageOne },
+        { id: 2, image: imageTwo },
+        { id: 3, image: imageThree },
+        { id: 4, image: imageFour },
+        { id: 5, image: imageFive },
+        { id: 6, image: imageSix },
+        { id: 7, image: imageSeven },
+        { id: 8, image: imageEight },
+        { id: 9, image: imageNine },
+        { id: 10, image: imageTen },
+        { id: 11, image: imageElaven },
+        { id: 12, image: imageTwelve },
+        { id: 13, image: imageThirteen },
+        { id: 14, image: imageFifteen },
+        { id: 15, image: imageSixteen },
+        { id: 16, image: imageSeventeen },
+        { id: 17, image: imageEighteen },
+        { id: 18, image: imageNinteen },
+        { id: 19, image: imageTwenty },
+        { id: 20, image: imageTwentyOne },
+        { id: 21, image: imageTwentyTwo },
+        { id: 22, image: imageTwentyThree },
+        { id: 23, image: imageTwentyFour },
+        { id: 24, image: imageTwentyFive },
+        { id: 25, image: imageTwentySix },
+        { id: 26, image: imageTwentySeven },
+        { id: 27, image: imageTwentyEight },
+        { id: 28, image: imageTwentyNine },
+        { id: 29, image: imageThirty },
+        { id: 30, image: imageThirtyOne },
+        { id: 31, image: imageThirtyTwo }
     ];
 
-    const scrollLeft = () => {
-        if (sliderRef.current) {
-            sliderRef.current.scrollBy({ left: -324, behavior: 'smooth' });
-        }
-    };
+    useEffect(() => {
+        // Load Swiper CSS
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css';
+        document.head.appendChild(link);
 
-    const scrollRight = () => {
-        if (sliderRef.current) {
-            sliderRef.current.scrollBy({ left: 324, behavior: 'smooth' });
-        }
-    };
+        // Load Swiper JS
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+        script.async = true;
+
+        script.onload = () => {
+            if (window.Swiper && swiperRef.current) {
+                new window.Swiper(swiperRef.current, {
+                    slidesPerView: 1,
+                    spaceBetween: 30,
+                    centeredSlides: true,
+                    navigation: {
+                        nextEl: nextButtonRef.current,
+                        prevEl: prevButtonRef.current,
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 1,
+                            spaceBetween: 30,
+                            centeredSlides: true,
+                        },
+                        768: {
+                            slidesPerView: 2,
+                            spaceBetween: 30,
+                            centeredSlides: false,
+                        },
+                        1024: {
+                            slidesPerView: 3,
+                            spaceBetween: 30,
+                            centeredSlides: false,
+                        }
+                    },
+                    effect: 'slide',
+                    speed: 600,
+                    loop: false,
+                    grabCursor: true,
+                    slideToClickedSlide: true,
+                });
+            }
+        };
+
+        document.body.appendChild(script);
+
+        return () => {
+            if (document.head.contains(link)) document.head.removeChild(link);
+            if (document.body.contains(script)) document.body.removeChild(script);
+        };
+    }, []);
 
     return (
         <section className="py-16 bg-gray-50">
             <div className="container mx-auto px-4">
-
                 {/* Header */}
                 <div className="text-center mb-12">
                     <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                        Previous Work
+                        Featured Work
                     </h2>
                     <p className="text-gray-600 max-w-2xl mx-auto">
                         Explore our successful event validation projects and see how we've helped organizations streamline their attendee management.
                     </p>
                 </div>
 
-                <div className="relative">
+                <div className="relative px-8 sm:px-12">
                     {/* Navigation Buttons */}
                     <button
-                        onClick={scrollLeft}
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 bg-white dark:bg-gray-800 shadow-lg rounded-full w-10 h-10 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                        ref={prevButtonRef}
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-95"
+                        aria-label="Previous slide"
                     >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
 
                     <button
-                        onClick={scrollRight}
-                        className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-4 z-10 bg-white dark:bg-gray-800 shadow-lg rounded-full w-10 h-10 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+                        ref={nextButtonRef}
+                        className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-95"
+                        aria-label="Next slide"
                     >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
 
-                    {/* Cards Slider */}
-                    <div
-                        ref={sliderRef}
-                        className="flex overflow-x-auto space-x-6 pb-4 px-2 scroll-smooth scrollbar-hide"
-                        style={{ scrollBehavior: 'smooth' }}
-                    >
-                        {projects.map((project) => (
-                            <div
-                                key={project.id}
-                                className="min-w-[300px] bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 flex-shrink-0 hover:shadow-md transition-shadow duration-300"
-                            >
-
-
-                                <style>
-                                    {`div[data-slider-container] {
-                                    scrollbar-width: none;
-                                    -ms-overflow-style: none;
-                                }
-                                div[data-slider-container]::-webkit-scrollbar {
-                                    display: none;
-                                }`}
-                                </style>
-
-                                <div className="overflow-hidden rounded-t-lg">
-                                    <img
-                                        className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
-                                        src={project.image}
-                                        alt={project.title}
-                                    />
+                    {/* Swiper Container */}
+                    <div ref={swiperRef} className="swiper">
+                        <div className="swiper-wrapper">
+                            {projects.map((project) => (
+                                <div key={project.id} className="swiper-slide">
+                                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                                        <div className="overflow-hidden rounded-lg">
+                                            <img
+                                                className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
+                                                src={project.image}
+                                                alt={`Event ticket ${project.id}`}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-                                {/* <div className="p-5">
-                                    <h3 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                                        {project.title}
-                                    </h3>
-                                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                                        {project.description}
-                                    </p>
-                                </div> */}
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
