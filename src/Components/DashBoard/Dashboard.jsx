@@ -258,9 +258,9 @@ const Dashboard = () => {
   const [stats, setStats] = useState({});
   const ticketsPerPage = 10;
 
-  const getStats = async (attendee) => {
-    // Check if the attendee is blocked
-    if (attendee.isBlocked) return 'Blocked';
+  const getStats = async () => {
+    // // Check if the attendee is blocked
+    // if (attendee.isBlocked) return 'Blocked';
 
     try {
 
