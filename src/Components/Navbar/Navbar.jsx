@@ -5,7 +5,6 @@ import Do from '../Do/Do';
 import FAQ from '../FQA/Fqa';
 import TestimonialSection from '../TestimonialSection/TestimonialSection';
 import Footer from '../Footer/Footer';
-// import ContactForm from '../../Components/ContactFrom/contactFrom'
 import Login from '../Auth/Login';
 import { isAuthenticated, logout } from '../../lib/auth';
 import PreviousWork from '../PreviousWork/PreviousWork';
@@ -15,7 +14,6 @@ const Navbar = () => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Handle scroll effect for navbar
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -30,7 +28,6 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
-    // Prevent body scrolling when menu is open
     document.body.style.overflow = menuOpen ? 'auto' : 'hidden';
   };
 
@@ -38,7 +35,6 @@ const Navbar = () => {
     <>
       <div className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-md' : 'bg-white/50 backdrop-blur-sm'}`}>
         <div className="flex items-center justify-between p-4 max-w-7xl mx-auto">
-          {/* Logo */}
           <div className="flex items-center space-x-2 z-60">
             <a href="#" className="flex-shrink-0">
               <img
@@ -49,7 +45,6 @@ const Navbar = () => {
             </a>
           </div>
 
-          {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center space-x-6 lg:space-x-12 text-gray-700">
             <a
               href="#"
@@ -77,14 +72,12 @@ const Navbar = () => {
             </a>
           </nav>
 
-          {/* Desktop Log In Button */}
           <div className="hidden md:flex items-center">
             {
               isAuthenticated() ? (
                 <button
                   className="w-full flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-gradient-to-r from-red-500 to-orange-500 rounded-xl shadow-lg hover:from-red-600 hover:to-orange-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:shadow-inner group"
                   onClick={() => {
-                    // Add your logout function here
                     logout();
                   }}
                 >
@@ -121,7 +114,6 @@ const Navbar = () => {
             }
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             <button
               onClick={toggleMenu}
@@ -135,13 +127,11 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu Overlay */}
         <div
           className={`md:hidden fixed inset-0 bg-black transition-opacity duration-300 h-screen z-40 ${menuOpen ? 'opacity-50 pointer-events-auto ' : 'opacity-0 pointer-events-none'}`}
           onClick={toggleMenu}
         ></div>
 
-        {/* Mobile Menu - Full Height */}
         <div className={`md:hidden fixed top-0 right-0 w-4/5 max-w-sm bg-white shadow-xl z-50 transform transition-transform duration-300 h-screen ease-in-out ${menuOpen ? 'translate-x-0 ' : 'translate-x-full'}`}>
           <div className="flex flex-col h-full pt-20 pb-6 px-6 overflow-y-auto">
             <nav className="flex flex-col space-y-6 text-gray-700 flex-grow">
@@ -180,7 +170,6 @@ const Navbar = () => {
                     className="w-full flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white bg-gradient-to-r from-red-500 to-orange-500 rounded-xl shadow-lg hover:from-red-600 hover:to-orange-600 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:shadow-inner group"
                     onClick={() => {
                       setMenuOpen(false);
-                      // Add your logout function here
                       logout();
                     }}
                   >
@@ -223,11 +212,9 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Login Modal Overlay */}
       {loginOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4 animate-fadeIn">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 p-6 relative animate-scaleIn">
-            {/* Close Button */}
             <button
               onClick={closeLogin}
               className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center text-2xl font-bold transition-colors duration-200"
@@ -236,7 +223,6 @@ const Navbar = () => {
               ×
             </button>
 
-            {/* Login Form Component */}
             <div className="mt-2">
               <Login closeLogin={closeLogin} />
             </div>
@@ -244,7 +230,6 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Main content with proper spacing for fixed navbar */}
       <div className=" overflow-hidden overflow-y-auto">
         <HeroSection />
         <Dashboard />
@@ -252,17 +237,10 @@ const Navbar = () => {
 
         <TestimonialSection />
         <FAQ />
-
-        {/* Previous work section starts here */}
-
         <PreviousWork />
-        {/* Previous work section ends here */}
-
-        {/* <ContactForm /> */}
         <Footer />
       </div>
 
-      {/* Add these animations to your CSS */}
       <style jsx>{`
         @keyframes fadeIn {
           from { opacity: 0; }

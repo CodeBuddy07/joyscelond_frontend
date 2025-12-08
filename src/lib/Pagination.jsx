@@ -7,13 +7,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     };
 
     const pageNumbers = [];
-    const delta = 2; // Number of pages to show around the current page
+    const delta = 2;
 
     for (let i = Math.max(1, currentPage - delta); i <= Math.min(totalPages, currentPage + delta); i++) {
         pageNumbers.push(i);
     }
 
-    if (totalPages <= 1) return null; // Don't render pagination if there's only one page
+    if (totalPages <= 1) return null;
 
     return (
         <div className="flex justify-center items-center gap-1 mt-5">

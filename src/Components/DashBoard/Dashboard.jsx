@@ -6,8 +6,7 @@ import Pagination from '../../lib/Pagination';
 import { toast } from 'sonner';
 
 function formatDateTime(date) {
-  const x = new Date(date); // Convert the string date into a Date object
-
+  const x = new Date(date); 
   const options = {
     weekday: 'long',
     year: 'numeric',
@@ -19,21 +18,17 @@ function formatDateTime(date) {
     hour12: true,
   };
 
-  // Correct usage of toLocaleString with options
   return x.toLocaleString('en-US', options);
 }
 
-// Modal Component
 const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
   if (!isOpen || !attendee) return null;
 
 
 
   const getStatus = (attendee) => {
-    // Check if the attendee is blocked
     if (attendee.isBlocked) return 'Blocked';
 
-    // Get the latest scan and de-scan timestamps (if available)
     const lastScanTime = attendee.scanLogs && attendee.scanLogs.length > 0
       ? new Date(attendee.scanLogs[attendee.scanLogs.length - 1])
       : null;
@@ -42,17 +37,14 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
       ? new Date(attendee.deScanLogs[attendee.deScanLogs.length - 1])
       : null;
 
-    // If there is a scan log and the de-scan log is either non-existent or older, consider the attendee "Present"
     if (lastScanTime && (!lastDeScanTime || lastScanTime > lastDeScanTime)) {
       return 'Present';
     }
 
-    // If there is a de-scan log and it's more recent than the scan log, consider the attendee "Absent"
     if (lastDeScanTime && (!lastScanTime || lastDeScanTime > lastScanTime)) {
       return 'Absent';
     }
 
-    // If no scan or de-scan logs exist, assume "Absent"
     return 'Absent';
   };
 
@@ -66,7 +58,6 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-200">
           <h2 className="text-2xl font-bold text-gray-900">
             Attendee Details - {attendee.ticketID}
@@ -81,9 +72,7 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
           </button>
         </div>
 
-        {/* Modal Content */}
         <div className="p-6 space-y-6">
-          {/* Basic Information */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
@@ -142,7 +131,6 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Scan Logs */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
@@ -189,34 +177,12 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* QR Code Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
               QR Code Information
             </h3>
-            {/* <div className="space-y-3">
-              <div className="flex justify-between items-start">
-                <span className="font-medium text-gray-700">QR Link:</span>
-                <a 
-                  href={attendee.qrLink} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 text-sm break-all max-w-xs text-right"
-                >
-                  {attendee.qrLink}
-                </a>
-              </div>
-              
-              <div className="flex justify-between">
-                <span className="font-medium text-gray-700">QR Code Available:</span>
-                <span className={attendee.qr ? 'text-green-600' : 'text-red-600'}>
-                  {attendee.qr ? 'Yes' : 'No'}
-                </span>
-              </div>
-            </div> */}
           </div>
 
-          {/* Summary */}
           <div className="bg-gray-50 p-4 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">Summary</h3>
             <div className="grid grid-cols-2 gap-4 text-center">
@@ -232,7 +198,6 @@ const AttendeeDetailsModal = ({ attendee, isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Modal Footer */}
         <div className="flex justify-end p-6 border-t border-gray-200">
           <button
             onClick={onClose}
@@ -259,8 +224,6 @@ const Dashboard = () => {
   const ticketsPerPage = 10;
 
   const getStats = async () => {
-    // // Check if the attendee is blocked
-    // if (attendee.isBlocked) return 'Blocked';
 
     try {
 
@@ -272,28 +235,6 @@ const Dashboard = () => {
       } else {
         console.log('Failed to fetch tickets stats');
       }
-
-      // // Get the latest scan and de-scan timestamps (if available)
-      // const lastScanTime = attendee.scanLogs && attendee.scanLogs.length > 0
-      //   ? new Date(attendee.scanLogs[attendee.scanLogs.length - 1])
-      //   : null;
-
-      // const lastDeScanTime = attendee.deScanLogs && attendee.deScanLogs.length > 0
-      //   ? new Date(attendee.deScanLogs[attendee.deScanLogs.length - 1])
-      //   : null;
-
-      // // If there is a scan log and the de-scan log is either non-existent or older, consider the attendee "Present"
-      // if (lastScanTime && (!lastDeScanTime || lastScanTime > lastDeScanTime)) {
-      //   return 'Present';
-      // }
-
-      // // If there is a de-scan log and it's more recent than the scan log, consider the attendee "Absent"
-      // if (lastDeScanTime && (!lastScanTime || lastDeScanTime > lastScanTime)) {
-      //   return 'Absent';
-      // }
-
-      // // If no scan or de-scan logs exist, assume "Absent"
-      // return 'Absent';
 
     } catch (error) {
       console.log('Error Fetching Stats: ', error);
@@ -421,14 +362,12 @@ const Dashboard = () => {
     <ProtectedRoute requiredRole="STAFF">
       <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 text-center">
               Event Dashboard
             </h1>
           </div>
 
-          {/* Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             <div
               className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 sm:p-8"
@@ -448,7 +387,7 @@ const Dashboard = () => {
             >
               <div className="text-center">
                 <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-red-600`}>
-                 {stats.usedTickets}
+                  {stats.usedTickets}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
                   Absent
@@ -470,7 +409,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Attendees List Section */}
           <div className="mt-12 bg-white rounded-lg shadow-md p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
@@ -492,10 +430,8 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Table */}
             <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
               <table className="min-w-full divide-y divide-gray-200">
-                {/* Table Header */}
                 <thead className="bg-cyan-500">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider rounded-tl-lg">
@@ -510,7 +446,6 @@ const Dashboard = () => {
                   </tr>
                 </thead>
 
-                {/* Table Body */}
                 <tbody className="bg-white divide-y divide-gray-200">
                   {attendees.map((attendee, index) => (
                     <tr key={index} className="hover:bg-gray-50 transition-colors duration-150">
@@ -572,7 +507,6 @@ const Dashboard = () => {
               onPageChange={handlePageChange}
             />
 
-            {/* No results message */}
             {attendees.length === 0 && (
               <div className="text-center py-8 text-gray-500">
                 No attendees found matching your search.
@@ -580,7 +514,6 @@ const Dashboard = () => {
             )}
           </div>
 
-          {/* Additional Info Section */}
           <div className="mt-12 bg-white rounded-lg shadow-md p-6 sm:p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="text-center">
@@ -611,7 +544,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Details Modal */}
         <AttendeeDetailsModal
           attendee={selectedAttendee}
           isOpen={isModalOpen}

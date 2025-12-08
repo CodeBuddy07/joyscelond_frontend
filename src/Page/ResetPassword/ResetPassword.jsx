@@ -27,7 +27,6 @@ const ResetPassword = () => {
             });
             if (response.data.success) {
                 toast.success('Password reset successful. You can now log in with your new password.');
-                // Redirect to login page or another page
                 window.location.href = '/';
             }
 

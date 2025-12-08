@@ -14,14 +14,12 @@ function TestimonialSection() {
     review: ''
   });
 
-  // Items to show per slide (responsive)
   const itemsPerSlide = {
     mobile: 1,
     tablet: 2,
     desktop: 2
   };
 
-  // Get current items per slide based on screen size
   const getCurrentItemsPerSlide = () => {
     if (typeof window !== 'undefined') {
       if (window.innerWidth >= 1024) return itemsPerSlide.desktop;
@@ -32,18 +30,16 @@ function TestimonialSection() {
 
   const [currentItemsPerSlide, setCurrentItemsPerSlide] = useState(getCurrentItemsPerSlide());
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       setCurrentItemsPerSlide(getCurrentItemsPerSlide());
-      setCurrentIndex(0); // Reset to first slide on resize
+      setCurrentIndex(0);
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Fetch testimonials from API
   const fetchTestimonials = async () => {
     try {
       setLoading(true);
@@ -51,14 +47,12 @@ function TestimonialSection() {
       setTestimonials(response.data.data || []);
     } catch (error) {
       console.error('Error fetching testimonials:', error);
-      // Fallback to empty array if API fails
       setTestimonials([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Load testimonials on component mount
   useEffect(() => {
     fetchTestimonials();
   }, []);
@@ -97,19 +91,15 @@ function TestimonialSection() {
       const response = await axiosSecure.post('/api/v1/review/create', formData);
       
       if (response.data.success) {
-        // Add new testimonial to the beginning of the list
         setTestimonials(prev => [response.data.data, ...prev]);
         
-        // Reset form
         setFormData({
           name: '',
           starCount: 5,
           review: ''
         });
         setShowForm(false);
-        
-        // Reset slider to show the new testimonial
-        setCurrentIndex(0);
+                setCurrentIndex(0);
       }
     } catch (error) {
       console.error('Error submitting review:', error);
@@ -126,7 +116,6 @@ function TestimonialSection() {
     }));
   };
 
-  // Slider navigation
   const maxIndex = Math.max(0, Math.ceil(testimonials.length / currentItemsPerSlide) - 1);
 
   const nextSlide = () => {
@@ -137,20 +126,18 @@ function TestimonialSection() {
     setCurrentIndex(prev => (prev <= 0 ? maxIndex : prev - 1));
   };
 
-  // Get visible testimonials for current slide
   const getVisibleTestimonials = () => {
     const startIndex = currentIndex * currentItemsPerSlide;
     const endIndex = startIndex + currentItemsPerSlide;
     return testimonials.slice(startIndex, endIndex);
   };
 
-  // Auto-slide functionality
   useEffect(() => {
     if (testimonials.length <= currentItemsPerSlide) return;
 
     const interval = setInterval(() => {
       setCurrentIndex(prev => (prev >= maxIndex ? 0 : prev + 1));
-    }, 5000); // Auto slide every 5 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [testimonials.length, currentItemsPerSlide, maxIndex]);
@@ -159,7 +146,6 @@ function TestimonialSection() {
     <div className="bg-white py-16 px-4 relative">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-          {/* Left Side - Heading and Button */}
           <div className="lg:pr-8">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-8">
               What Our Valuable
@@ -175,7 +161,6 @@ function TestimonialSection() {
             </button>
           </div>
 
-          {/* Right Side - Testimonials Slider */}
           <div className="relative">
             {loading ? (
               <div className="flex items-center justify-center h-64">
@@ -187,24 +172,20 @@ function TestimonialSection() {
               </div>
             ) : (
               <>
-                {/* Testimonials Container */}
                 <div className="space-y-6">
                   {getVisibleTestimonials().map((testimonial) => (
                     <div
                       key={testimonial._id}
                       className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
                     >
-                      {/* Star Rating */}
                       <div className="flex items-center mb-4">
                         {renderStars(testimonial.starCount)}
                       </div>
 
-                      {/* Review Text */}
                       <p className="text-gray-600 text-sm leading-relaxed mb-6">
                         {testimonial.review}
                       </p>
 
-                      {/* User Info */}
                       <div className="flex items-center">
                         <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-full mr-3 flex items-center justify-center">
                           <User className="w-5 h-5 text-white" />
@@ -226,7 +207,6 @@ function TestimonialSection() {
                   ))}
                 </div>
 
-                {/* Navigation Controls */}
                 {testimonials.length > currentItemsPerSlide && (
                   <div className="flex items-center justify-between mt-6">
                     <button
@@ -237,7 +217,6 @@ function TestimonialSection() {
                       <ChevronLeft className="w-5 h-5 text-gray-600" />
                     </button>
 
-                    {/* Pagination dots */}
                     <div className="flex space-x-2">
                       {[...Array(maxIndex + 1)].map((_, index) => (
                         <button
@@ -266,7 +245,6 @@ function TestimonialSection() {
         </div>
       </div>
 
-      {/* Add Review Modal/Form */}
       {showForm && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-[2px] flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
@@ -282,7 +260,6 @@ function TestimonialSection() {
             </div>
 
             <div className="space-y-6">
-              {/* Name Input */}
               <div>
                 <label className="block text-sm font-medium text-black mb-2">
                   Your Name *
@@ -297,8 +274,6 @@ function TestimonialSection() {
                   disabled={isSubmitting}
                 />
               </div>
-
-              {/* Rating */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Rating
@@ -307,8 +282,6 @@ function TestimonialSection() {
                   {renderClickableStars(formData.starCount, (rating) => handleInputChange('starCount', rating))}
                 </div>
               </div>
-
-              {/* Review Text */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Your Review *
@@ -323,8 +296,6 @@ function TestimonialSection() {
                   disabled={isSubmitting}
                 />
               </div>
-
-              {/* Submit Button */}
               <div className="flex flex-col space-y-3 pt-4">
                 <button
                   type="button"

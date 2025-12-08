@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-// CountUp component simulation since we don't have the library
 const CountUp = ({ end, duration, suffix = '' }) => {
   const [count, setCount] = useState(0);
 
@@ -59,7 +58,6 @@ function Do() {
   return (
     <section id='bio' className="my-4 sm:my-6 md:my-8 lg:-mt-0 dark:bg-gray-100 dark:text-gray-800 px-2 sm:px-4">
 
-      {/* Stats */}
       <div className="mt-4 sm:mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         <div className="text-center p-4 sm:p-6 md:p-8 bg-gray-50 rounded-lg flex flex-col items-center justify-center">
           <div className="text-xl sm:text-2xl md:text-3xl font-bold text-violet-600 mb-1 sm:mb-2">
@@ -135,12 +133,6 @@ function Do() {
               <p className="mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base text-gray-700 leading-relaxed">
                 Recognizing the need for enhanced security in ticketing, we pioneered ticket numbering for safety, later incorporating holograms and tamper-proof seals. However, with increased security comes increased cost, and nobody likes extra costs. Our commitment to improvement led us to develop UV light tickets, featuring hidden watermarks and holograms that are only visible under UV light. This cutting-edge solution not only enhances security but also reduces costs associated with traditional ticketing methods, as the machine was built over 2 years with continuous in-house R&D using modular printing kits by brands like Mimaki, Epson, and Xerox. Hence, we can proudly say that this UV printing technology was built and not brought.
               </p>
-
-              {/* <p className="mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base text-gray-700 leading-relaxed">
-              Continuing our pursuit of excellence, we have newly introduced a sophisticated QR code ticketing system, streamlining ticket authentication and boosting sales through e-tickets sent via email, WhatsApp, and social media platforms.  
-
- 
-              </p> */}
 
               <p className="mb-2 sm:mb-3 md:mb-4 text-sm sm:text-base text-gray-700 leading-relaxed">
                 Continuing our pursuit of excellence, we have newly introduced a sophisticated QR code ticketing system, streamlining ticket authentication and boosting sales through e-tickets sent via email, WhatsApp, and social media platforms.

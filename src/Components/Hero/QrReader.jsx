@@ -7,12 +7,9 @@ const QrReader = ({ onScan, onError, onClose, method = 'scan' }) => {
   const [isScanning, setIsScanning] = useState(false);
   const [cameraError, setCameraError] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-
-  // Store the currently scanned QR code (only one at a time)
   const currentQrCodeRef = useRef(null);
   const hasApiBeenCalledRef = useRef(false);
 
-  // Create beep sound function
   const playBeep = useCallback(() => {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const oscillator = audioContext.createOscillator();
@@ -64,30 +61,23 @@ const QrReader = ({ onScan, onError, onClose, method = 'scan' }) => {
           if (result && !isProcessing) {
             const qrData = result.getText();
 
-            // CHANGED: Check if this is a new QR code
             if (currentQrCodeRef.current !== qrData) {
-              // CHANGED: New QR code detected - replace the previous one
               currentQrCodeRef.current = qrData;
               hasApiBeenCalledRef.current = false;
               
-              // CHANGED: If API hasn't been called for this QR code, call it
               if (!hasApiBeenCalledRef.current) {
                 setIsProcessing(true);
                 hasApiBeenCalledRef.current = true;
 
-                // CHANGED: Play beep sound
                 playBeep();
 
-                // Call the onScan callback
                 onScan(qrData);
 
-                // Reset processing state after 2 seconds
                 setTimeout(() => {
                   setIsProcessing(false);
                 }, 2000);
               }
             }
-            // If same QR code is still in view, do nothing (don't hit API again)
           }
 
           if (err && !(err.name === 'NotFoundException')) {
@@ -109,14 +99,12 @@ const QrReader = ({ onScan, onError, onClose, method = 'scan' }) => {
       codeReaderRef.current.reset();
       codeReaderRef.current = null;
     }
-    // CHANGED: Clear the current QR code when stopping
     currentQrCodeRef.current = null;
     hasApiBeenCalledRef.current = false;
     setIsScanning(false);
     setIsProcessing(false);
   }, []);
 
-  // CHANGED: When method changes, reset everything and restart scanning
   useEffect(() => {
     currentQrCodeRef.current = null;
     hasApiBeenCalledRef.current = false;

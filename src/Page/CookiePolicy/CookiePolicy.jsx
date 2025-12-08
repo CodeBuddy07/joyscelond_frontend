@@ -4,20 +4,16 @@ export default function CookiePolicy() {
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4">
             <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-6 md:p-10">
-                {/* Header */}
                 <div className="border-b border-gray-200 pb-6 mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Cookie Policy</h1>
                     <p className="text-sm text-gray-500">kutmasterz</p>
                 </div>
 
-                {/* Intro */}
                 <p className="text-gray-700 leading-relaxed mb-8">
                     This Cookie Policy explains how kutmasterz uses cookies and similar technologies on our Platform.
                 </p>
 
-                {/* Content */}
                 <div className="space-y-8">
-                    {/* Section 1 */}
                     <section>
                         <h2 className="text-xl font-semibold text-gray-900 mb-3">1. What Are Cookies?</h2>
                         <p className="text-gray-700 leading-relaxed">
@@ -25,7 +21,6 @@ export default function CookiePolicy() {
                         </p>
                     </section>
 
-                    {/* Section 2 */}
                     <section>
                         <h2 className="text-xl font-semibold text-gray-900 mb-3">2. Our Use of Cookies</h2>
                         <div className="bg-gray-50 border-l-4 border-gray-900 p-4 rounded">
@@ -38,7 +33,6 @@ export default function CookiePolicy() {
                         </p>
                     </section>
 
-                    {/* Section 3 */}
                     <section>
                         <h2 className="text-xl font-semibold text-gray-900 mb-3">3. Third-Party Cookies</h2>
                         <p className="text-gray-700 leading-relaxed">
@@ -46,7 +40,6 @@ export default function CookiePolicy() {
                         </p>
                     </section>
 
-                    {/* Section 4 */}
                     <section>
                         <h2 className="text-xl font-semibold text-gray-900 mb-3">4. Types of Cookies We Do NOT Use</h2>
                         <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
@@ -57,7 +50,6 @@ export default function CookiePolicy() {
                         </ul>
                     </section>
 
-                    {/* Section 5 */}
                     <section>
                         <h2 className="text-xl font-semibold text-gray-900 mb-3">5. Your Privacy</h2>
                         <p className="text-gray-700 leading-relaxed">
@@ -65,7 +57,6 @@ export default function CookiePolicy() {
                         </p>
                     </section>
 
-                    {/* Section 6 */}
                     <section>
                         <h2 className="text-xl font-semibold text-gray-900 mb-3">6. Browser Settings</h2>
                         <p className="text-gray-700 leading-relaxed">
@@ -73,7 +64,6 @@ export default function CookiePolicy() {
                         </p>
                     </section>
 
-                    {/* Section 7 */}
                     <section>
                         <h2 className="text-xl font-semibold text-gray-900 mb-3">7. Changes to This Cookie Policy</h2>
                         <p className="text-gray-700 leading-relaxed">
@@ -81,7 +71,6 @@ export default function CookiePolicy() {
                         </p>
                     </section>
 
-                    {/* Section 8 */}
                     <section>
                         <h2 className="text-xl font-semibold text-gray-900 mb-3">8. Contact Information</h2>
                         <p className="text-gray-700 leading-relaxed">

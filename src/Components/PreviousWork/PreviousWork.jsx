@@ -71,13 +71,11 @@ const PreviousWork = () => {
     ];
 
     useEffect(() => {
-        // Load Swiper CSS
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css';
         document.head.appendChild(link);
 
-        // Load Swiper JS
         const script = document.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
         script.async = true;
@@ -129,7 +127,6 @@ const PreviousWork = () => {
     return (
         <section className="py-16 bg-gray-50">
             <div className="container mx-auto px-4">
-                {/* Header */}
                 <div className="text-center mb-12">
                     <h2 className="text-3xl font-bold text-gray-900 mb-4">
                         Featured Work
@@ -140,7 +137,6 @@ const PreviousWork = () => {
                 </div>
 
                 <div className="relative px-8 sm:px-12">
-                    {/* Navigation Buttons */}
                     <button
                         ref={prevButtonRef}
                         className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-gray-700 hover:bg-gray-100 transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-95"
@@ -161,7 +157,6 @@ const PreviousWork = () => {
                         </svg>
                     </button>
 
-                    {/* Swiper Container */}
                     <div ref={swiperRef} className="swiper">
                         <div className="swiper-wrapper">
                             {projects.map((project) => (

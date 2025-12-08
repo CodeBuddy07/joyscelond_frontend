@@ -30,7 +30,6 @@ const RequestDemo = () => {
             }
 
             setSubmitted(true);
-            // Reset form after showing success message
             setTimeout(() => {
                 setEmail('');
                 setPhone('');
@@ -55,18 +54,10 @@ const RequestDemo = () => {
 
     return (
         < div id="contact" className="space-y-4" >
-            {/* <h6 className="font-semibold text-gray-800 uppercase text-sm tracking-wider">
-                GET STARTED
-            </h6> */}
 
             {
                 !showForm ? (
                     <div className="space-y-4">
-                        {/* <p className="text-sm text-gray-600 leading-relaxed">
-                            Ready to see what we can do for you? Request a personalized demo today.
-                        </p> */}
-
-                        {/* Request Demo Button */}
                         <div className="flex items-center gap-5 justify-center mt-8">
                             <button
                                 onClick={handleRequestDemo}
@@ -110,7 +101,6 @@ const RequestDemo = () => {
                         </p>
 
                         <div className="space-y-3">
-                            {/* Email Input */}
                             <input
                                 type="email"
                                 placeholder="Your email address"
@@ -120,7 +110,6 @@ const RequestDemo = () => {
                                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent placeholder-gray-400 text-gray-700 bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
                             />
 
-                            {/* Phone Input */}
                             <input
                                 type="tel"
                                 placeholder="Your phone number"
@@ -130,7 +119,6 @@ const RequestDemo = () => {
                                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent placeholder-gray-400 text-gray-700 bg-white disabled:bg-gray-100 disabled:cursor-not-allowed"
                             />
 
-                            {/* Action Buttons */}
                             <div className="flex space-x-2">
                                 <button
                                     onClick={handleSubmitDemo}

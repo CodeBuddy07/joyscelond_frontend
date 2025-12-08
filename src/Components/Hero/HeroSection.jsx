@@ -13,7 +13,6 @@ const HeroSection = () => {
   const [isProcessingAPI, setIsProcessingAPI] = useState(false);
 
   const apiCallInProgress = useRef(false);
-  // CHANGED: Store toast IDs to manage them
   const activeToastId = useRef(null);
 
   const handleScan = useCallback(async (qrData) => {
@@ -25,12 +24,10 @@ const HeroSection = () => {
       apiCallInProgress.current = true;
       setIsProcessingAPI(true);
 
-      // CHANGED: Dismiss any existing toast before showing new one
       if (activeToastId.current) {
         toast.dismiss(activeToastId.current);
       }
 
-      // CHANGED: Store the loading toast ID
       activeToastId.current = toast.loading('Processing...', {
         description: 'Validating ticket'
       });
@@ -39,35 +36,30 @@ const HeroSection = () => {
         method: 'scan'
       });
 
-      // CHANGED: Dismiss the loading toast
       toast.dismiss(activeToastId.current);
 
       if (response.data.success) {
-        // CHANGED: Store new toast ID and show success with shorter duration
         activeToastId.current = toast.success(response.data.message || 'Scan successful!', {
           description: response.data.data?.scanCount > 1 
             ? `Scanned ${response.data.data.scanCount} times`
             : 'Entry granted',
-          duration: 2500, // CHANGED: Reduced from 4000ms to 2500ms
+          duration: 2500, 
         });
       } else {
-        // CHANGED: Store error toast ID
         activeToastId.current = toast.error(response.data.message || 'Scan unsuccessful!', {
-          duration: 3000, // CHANGED: Reduced from 4000ms to 3000ms
+          duration: 3000,
         });
       }
 
     } catch (error) {
-      // CHANGED: Dismiss loading toast on error
       if (activeToastId.current) {
         toast.dismiss(activeToastId.current);
       }
 
       const errorMessage = error.response?.data?.message || 'Error processing QR code';
 
-      // CHANGED: Store error toast ID with shorter duration
       activeToastId.current = toast.error(errorMessage, {
-        duration: 3000, // CHANGED: Reduced from 4000ms to 3000ms
+        duration: 3000, 
       });
 
       console.error('API Error:', error);
@@ -86,12 +78,10 @@ const HeroSection = () => {
       apiCallInProgress.current = true;
       setIsProcessingAPI(true);
 
-      // CHANGED: Dismiss any existing toast before showing new one
       if (activeToastId.current) {
         toast.dismiss(activeToastId.current);
       }
 
-      // CHANGED: Store the loading toast ID
       activeToastId.current = toast.loading('Processing...', {
         description: 'Validating exit'
       });
@@ -100,35 +90,30 @@ const HeroSection = () => {
         method: 'deScan'
       });
 
-      // CHANGED: Dismiss the loading toast
       toast.dismiss(activeToastId.current);
 
       if (response.data.success) {
-        // CHANGED: Store new toast ID and show success with shorter duration
         activeToastId.current = toast.success(response.data.message || 'De-scan successful!', {
           description: response.data.data?.deScanCount > 1
             ? `De-scanned ${response.data.data.deScanCount} times`
             : 'Exit recorded',
-          duration: 2500, // CHANGED: Reduced from 4000ms to 2500ms
+          duration: 2500, 
         });
       } else {
-        // CHANGED: Store error toast ID
         activeToastId.current = toast.error(response.data.message || 'De-scan unsuccessful!', {
-          duration: 3000, // CHANGED: Reduced from 4000ms to 3000ms
+          duration: 3000, 
         });
       }
 
     } catch (error) {
-      // CHANGED: Dismiss loading toast on error
       if (activeToastId.current) {
         toast.dismiss(activeToastId.current);
       }
 
       const errorMessage = error.response?.data?.message || 'Error processing QR code';
 
-      // CHANGED: Store error toast ID with shorter duration
       activeToastId.current = toast.error(errorMessage, {
-        duration: 3000, // CHANGED: Reduced from 4000ms to 3000ms
+        duration: 3000,
       });
 
       console.error('API Error:', error);
@@ -147,16 +132,14 @@ const HeroSection = () => {
   }, [method, handleScan, handleDeScan]);
 
   const handleError = useCallback((err) => {
-    // CHANGED: Dismiss any existing toast before showing error
     if (activeToastId.current) {
       toast.dismiss(activeToastId.current);
     }
 
     const errorMessage = err?.message || 'Camera error occurred';
-    // CHANGED: Store error toast ID with shorter duration
     activeToastId.current = toast.error('Scanner Error', {
       description: errorMessage,
-      duration: 3000, // CHANGED: Reduced from 5000ms to 3000ms
+      duration: 3000, 
     });
     console.error('QR Scanner error:', err);
   }, []);
@@ -167,8 +150,6 @@ const HeroSection = () => {
     apiCallInProgress.current = false;
     setIsProcessingAPI(false);
 
-    // CHANGED: Removed start scanning toast (unnecessary noise)
-    // Users can see the scanner modal opening, no need for toast
   }, []);
 
   const handleStopScanning = useCallback(() => {
@@ -176,14 +157,10 @@ const HeroSection = () => {
     setIsProcessingAPI(false);
     apiCallInProgress.current = false;
 
-    // CHANGED: Dismiss any active toast when stopping
     if (activeToastId.current) {
       toast.dismiss(activeToastId.current);
       activeToastId.current = null;
     }
-
-    // CHANGED: Removed stop scanning toast (unnecessary)
-    // Reload happens immediately, user won't see it anyway
 
     window.location.reload();
   }, []);
@@ -191,14 +168,12 @@ const HeroSection = () => {
   const switchMethod = useCallback((newMethod) => {
     setMethod(newMethod);
     
-    // CHANGED: Dismiss any active toast when switching modes
     if (activeToastId.current) {
       toast.dismiss(activeToastId.current);
     }
 
-    // CHANGED: Show mode switch toast with shorter duration
     activeToastId.current = toast.info(`${newMethod === 'scan' ? 'Scan' : 'De-Scan'} Mode`, {
-      duration: 1500, // CHANGED: Reduced from 2000ms to 1500ms
+      duration: 1500, 
     });
   }, []);
 
@@ -245,11 +220,9 @@ const HeroSection = () => {
         </div>
       </section>
 
-      {/* QR Scanner Modal */}
       {isScanning && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-md mx-auto relative">
-            {/* Header */}
             <div className="flex justify-between items-center mb-4">
               <h2 className="lg:text-xl text-lg font-semibold text-gray-800 text-nowrap">
                 QR Code Scanner
@@ -280,7 +253,6 @@ const HeroSection = () => {
               method={method}
             />
 
-            {/* Mode Switch Buttons */}
             <div className="flex gap-2 mt-4">
               <button
                 onClick={() => switchMethod('scan')}
@@ -302,7 +274,6 @@ const HeroSection = () => {
               </button>
             </div>
 
-            {/* Footer */}
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-600">
                 {method === 'scan'

@@ -78,7 +78,6 @@ function FAQ() {
 
   return (
     <div id="FAQ" className="max-w-2xl mx-auto px-4 py-12 lg:mt-10">
-      {/* Header */}
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
           Frequently asked questions
@@ -88,7 +87,6 @@ function FAQ() {
         </p>
       </div>
 
-      {/* FAQ Items */}
       <div className="space-y-4">
         {faqData.map((faq, index) => (
           <div key={index} className="border-b border-gray-200">
@@ -118,19 +116,6 @@ function FAQ() {
           </div>
         ))}
       </div>
-
-      {/* Contact Section */}
-      {/* <div className="mt-12 text-center bg-gray-50 rounded-lg p-8">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-          Still have questions?
-        </h3>
-        <p className="text-gray-600 mb-4">
-          Can't find the answer you're looking for? Please contact our support team from 8 AM to 8 PM.
-        </p>
-        <button className="bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] hover:from-blue-500 hover:to-cyan-500 text-black px-6 py-2 rounded-lg font-medium transition-colors">
-          Get Support
-        </button>
-      </div> */}
       <RequestDemo />
     </div>
   );

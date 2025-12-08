@@ -4,9 +4,6 @@ import Navbar from './Components/Navbar/Navbar'
 import { Toaster } from 'sonner'
 import ResetPassword from './Page/ResetPassword/ResetPassword'
 import PrivacyPolicy from './Page/PrivacyPolicy/PrivacyPolicy'
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-
 
 function App() {
 

@@ -22,7 +22,6 @@ export default function GeneralQueryCard() {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (showError) {
       setShowError(false);
       setErrorMessage('');
@@ -30,14 +29,12 @@ export default function GeneralQueryCard() {
   };
 
   const handleSubmit = async () => {
-    // Basic validation
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       setErrorMessage('Please fill in all required fields');
       setShowError(true);
       return;
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setErrorMessage('Please enter a valid email address');
@@ -51,8 +48,6 @@ export default function GeneralQueryCard() {
 
 
     try {
-      // Use the reusable email sender
-      // const result = await emailSender.sendEmailWithConfirmation(formData);
       const result = await axiosSecure.post('api/v1/email/send', { ...formData, requestType: "general" });
 
       console.log(result);
@@ -61,7 +56,6 @@ export default function GeneralQueryCard() {
         throw new Error(result.message || 'Failed to send message');
       }
 
-      // Reset form
       setFormData({
         name: '',
         email: '',
@@ -71,7 +65,6 @@ export default function GeneralQueryCard() {
 
       setShowSuccess(true);
 
-      // Hide success message and form after 3 seconds
       setTimeout(() => {
         setShowSuccess(false);
         setShowContactForm(false);
@@ -106,7 +99,6 @@ export default function GeneralQueryCard() {
 
   return (
     <div id='contact' className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 p-4">
-      {/* Success Toast */}
       {showSuccess && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 animate-bounce">
           <div className="bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2">
@@ -116,7 +108,6 @@ export default function GeneralQueryCard() {
         </div>
       )}
 
-      {/* Error Toast */}
       {showError && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
           <div className="bg-red-500 text-white px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2 max-w-md">
@@ -134,7 +125,6 @@ export default function GeneralQueryCard() {
 
       <div className="max-w-4xl mx-auto">
         {!showContactForm ? (
-          /* Query Card */
           <div className="flex items-center justify-center min-h-screen">
             <div
               onClick={handleCardClick}
@@ -161,9 +151,7 @@ export default function GeneralQueryCard() {
             </div>
           </div>
         ) : (
-          /* Contact Form */
           <div className="py-8">
-            {/* Header with Close Button */}
             <div className="flex justify-between items-center mb-8">
               <div className="text-center flex-1">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#2AD4FF] to-[#5FFDDE] bg-clip-text text-transparent mb-4">
@@ -181,7 +169,6 @@ export default function GeneralQueryCard() {
               </button>
             </div>
 
-            {/* Contact Form */}
             <div className="bg-white/70 backdrop-blur-lg rounded-2xl sm:rounded-3xl shadow-xl border border-white/20 p-6 sm:p-8 lg:p-10 max-w-2xl mx-auto">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 flex items-center justify-center">
                 <MessageSquare className="w-6 h-6 sm:w-7 sm:h-7 mr-3 text-sky-400" />
@@ -189,7 +176,6 @@ export default function GeneralQueryCard() {
               </h2>
 
               <div className="space-y-5 sm:space-y-6">
-                {/* Name Field */}
                 <div className="group">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Full Name *
@@ -208,7 +194,6 @@ export default function GeneralQueryCard() {
                   </div>
                 </div>
 
-                {/* Email Field */}
                 <div className="group">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Email Address *
@@ -227,7 +212,6 @@ export default function GeneralQueryCard() {
                   </div>
                 </div>
 
-                {/* Phone Field */}
                 <div className="group">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Phone Number
@@ -245,7 +229,6 @@ export default function GeneralQueryCard() {
                   </div>
                 </div>
 
-                {/* Message Field */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     Message *
@@ -261,7 +244,6 @@ export default function GeneralQueryCard() {
                   />
                 </div>
 
-                {/* Submit Button */}
                 <button
                   type="button"
                   onClick={handleSubmit}
