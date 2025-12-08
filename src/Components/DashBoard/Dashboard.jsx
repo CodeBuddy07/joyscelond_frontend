@@ -255,33 +255,50 @@ const Dashboard = () => {
   const [selectedAttendee, setSelectedAttendee] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [stats, setStats] = useState({});
   const ticketsPerPage = 10;
 
-  const getStatus = (attendee) => {
+  const getStats = async (attendee) => {
     // Check if the attendee is blocked
     if (attendee.isBlocked) return 'Blocked';
 
-    // Get the latest scan and de-scan timestamps (if available)
-    const lastScanTime = attendee.scanLogs && attendee.scanLogs.length > 0
-      ? new Date(attendee.scanLogs[attendee.scanLogs.length - 1])
-      : null;
+    try {
 
-    const lastDeScanTime = attendee.deScanLogs && attendee.deScanLogs.length > 0
-      ? new Date(attendee.deScanLogs[attendee.deScanLogs.length - 1])
-      : null;
+      const statResponse = await axiosSecure.get(`/api/v1/event/get-stats/${eventID}`, {});
 
-    // If there is a scan log and the de-scan log is either non-existent or older, consider the attendee "Present"
-    if (lastScanTime && (!lastDeScanTime || lastScanTime > lastDeScanTime)) {
-      return 'Present';
+      if (statResponse.data.success) {
+        setStats(statResponse.data.data);
+        console.log(statResponse.data.data);
+      } else {
+        console.log('Failed to fetch tickets stats');
+      }
+
+      // // Get the latest scan and de-scan timestamps (if available)
+      // const lastScanTime = attendee.scanLogs && attendee.scanLogs.length > 0
+      //   ? new Date(attendee.scanLogs[attendee.scanLogs.length - 1])
+      //   : null;
+
+      // const lastDeScanTime = attendee.deScanLogs && attendee.deScanLogs.length > 0
+      //   ? new Date(attendee.deScanLogs[attendee.deScanLogs.length - 1])
+      //   : null;
+
+      // // If there is a scan log and the de-scan log is either non-existent or older, consider the attendee "Present"
+      // if (lastScanTime && (!lastDeScanTime || lastScanTime > lastDeScanTime)) {
+      //   return 'Present';
+      // }
+
+      // // If there is a de-scan log and it's more recent than the scan log, consider the attendee "Absent"
+      // if (lastDeScanTime && (!lastScanTime || lastDeScanTime > lastScanTime)) {
+      //   return 'Absent';
+      // }
+
+      // // If no scan or de-scan logs exist, assume "Absent"
+      // return 'Absent';
+
+    } catch (error) {
+      console.log('Error Fetching Stats: ', error);
+      toast.error(error.response.data.message || "Error Fetching Stats.")
     }
-
-    // If there is a de-scan log and it's more recent than the scan log, consider the attendee "Absent"
-    if (lastDeScanTime && (!lastScanTime || lastDeScanTime > lastScanTime)) {
-      return 'Absent';
-    }
-
-    // If no scan or de-scan logs exist, assume "Absent"
-    return 'Absent';
   };
 
   const handlePageChange = (newPage) => {
@@ -296,6 +313,7 @@ const Dashboard = () => {
         setTotalPages(response.data.data.totalPages || 1);
         setCurrentPage(response.data.data.currentPage || 1);
         console.log('Fetched attendees:', response.data.data.tickets);
+        getStats();
       } else {
         console.error('Failed to fetch attendees:', response.data.message);
       }
@@ -430,7 +448,7 @@ const Dashboard = () => {
             >
               <div className="text-center">
                 <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-red-600`}>
-                  {(attendees.length * totalPages) - attendees.filter(ticket => getStatus(ticket)=='Present').length}
+                 {stats.usedTickets}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
                   Absent
@@ -443,7 +461,7 @@ const Dashboard = () => {
             >
               <div className="text-center">
                 <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-green-600`}>
-                  {attendees.filter(ticket => getStatus(ticket)=='Present').length}
+                  {stats.unusedTickets}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
                   Present
