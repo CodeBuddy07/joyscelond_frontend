@@ -377,7 +377,7 @@ const Dashboard = () => {
                   {attendees.length * totalPages}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
-                  Attendees
+                  Total Tickets
                 </div>
               </div>
             </div>
@@ -390,7 +390,7 @@ const Dashboard = () => {
                   {stats.usedTickets}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
-                  Absent
+                  Present
                 </div>
               </div>
             </div>
@@ -403,7 +403,7 @@ const Dashboard = () => {
                   {stats.unusedTickets}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
-                  Present
+                  Absent
                 </div>
               </div>
             </div>
