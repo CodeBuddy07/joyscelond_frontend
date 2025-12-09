@@ -386,7 +386,7 @@ const Dashboard = () => {
               className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 sm:p-8"
             >
               <div className="text-center">
-                <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-red-600`}>
+                <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-green-600`}>
                   {stats.usedTickets}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
@@ -399,7 +399,7 @@ const Dashboard = () => {
               className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 sm:p-8"
             >
               <div className="text-center">
-                <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-green-600`}>
+                <div className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 text-red-600`}>
                   {stats.unusedTickets}
                 </div>
                 <div className="text-sm sm:text-base lg:text-lg font-medium text-gray-700">
