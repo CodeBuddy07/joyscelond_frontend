@@ -6,7 +6,7 @@ import Pagination from '../../lib/Pagination';
 import { toast } from 'sonner';
 
 function formatDateTime(date) {
-  const x = new Date(date); 
+  const x = new Date(date);
   const options = {
     weekday: 'long',
     year: 'numeric',
@@ -215,7 +215,6 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const eventID = JSON.parse(localStorage.getItem('staffInfo'))?.eventID || 'event-id-not-found';
   const [attendees, setAttendees] = useState([]);
-  const [usedTicketPercentage, setUsedTicketPercentage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [selectedAttendee, setSelectedAttendee] = useState(null);
@@ -254,7 +253,6 @@ const Dashboard = () => {
         setAttendees(response.data.data.tickets);
         setTotalPages(response.data.data.totalPages || 1);
         setCurrentPage(response.data.data.currentPage || 1);
-        setUsedTicketPercentage(response.data.data.percentageUsed)
         console.log('Fetched attendees:', response.data.data.tickets);
         getStats();
       } else {
@@ -523,7 +521,7 @@ const Dashboard = () => {
                   Attendance Rate
                 </div>
                 <div className="text-2xl font-bold text-green-600">
-                  {usedTicketPercentage.toFixed(2) || 0}%
+                  { ((stats.usedTickets / stats.totalTickets) * 100).toFixed(2) || 0} %
                 </div>
               </div>
               <div className="text-center">
