@@ -521,7 +521,7 @@ const Dashboard = () => {
                   Attendance Rate
                 </div>
                 <div className="text-2xl font-bold text-green-600">
-                  { ((stats.usedTickets / stats.totalTickets) * 100).toFixed(2) || 0} %
+                  { ((stats?.usedTickets / stats?.totalTickets) * 100).toFixed(2) || 0} %
                 </div>
               </div>
               <div className="text-center">
